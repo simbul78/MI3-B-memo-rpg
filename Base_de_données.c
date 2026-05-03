@@ -1,23 +1,5 @@
 #include "fichier.h"
-int main(){
-    int grille_jeu[7][7];
-    int jrouge;
-    int jbleu;
-    int jjaune;
-    int jviolet;
-    typedef struct{
-
-
-
-    }armes;
-    typedef struct{
-
-
-
-    }monstres;
-    typedef struct{
-
-
-
-    }classes;
-}
+#include "donnees.h"
+typedef Carte labyrinthe[7][7];
+ProfilJoueur Donnees_joueur[100];
+int nb_joueurs_enregistres = 0;
