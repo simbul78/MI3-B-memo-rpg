@@ -20,13 +20,19 @@ typedef struct{
     int x;
     int y;
 }coordonnees;
+
+typedef struct{
+    char nom[50]; 
+    int parties_jouees;
+    int victoires;
+} ProfilJoueur;
 typedef struct{
     classe classe_joueur;
     armesDeBase arme_active;
-    char nom_joueur[50];
     int nb_coffre;
     armesAntiques Arme_légendaires;
     coordonnees a;
+    ProfilJoueur *joueur_qui_controle;
     
 }aventurier;
 typedef enum {
@@ -40,5 +46,5 @@ typedef struct{
         
 }Carte;
 extern Carte labyrinthe[7][7];
-
+extern ProfilJoueur Donnees_joueur[100];
 #endif

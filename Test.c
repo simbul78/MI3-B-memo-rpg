@@ -2,22 +2,12 @@
 #include "donnees.h"
 
 int main(){
-    extern Carte labyrinthe[7][7];
     int p;
     for(int i=0;i<7;i++){
         labyrinthe[0][i].Categorie_Carte = Bordure;
         labyrinthe[6][i].Categorie_Carte = Bordure;
-        labyrinthe[i][7].Categorie_Carte = Bordure;
+        labyrinthe[i][6].Categorie_Carte = Bordure;
         labyrinthe[i][0].Categorie_Carte = Bordure;
-        for(int j=0;j<7;j++){
-            if(labyrinthe[i][j].Categorie_Carte == Bordure){
-                printf(". ");
-            }
-            else{
-                printf("X");
-
-            }
-        }
     }
     do{
     printf("joueurs, choisissez votre case de départs (1 à 5)");
