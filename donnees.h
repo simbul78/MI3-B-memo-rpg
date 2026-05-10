@@ -30,7 +30,7 @@ typedef struct{
     classe classe_joueur;
     armesDeBase arme_active;
     int nb_coffre;
-    armesAntiques Arme_légendaires;
+    armesAntiques Arme_legendaires;
     coordonnees a;
     ProfilJoueur *joueur_qui_controle;
     
