@@ -14,7 +14,7 @@ typedef enum{
     
 }armesAntiques;
 typedef enum{
-        Basilics,Zombies,Trolls, Harpies
+        Basilics,Zombies,Trolls,Harpies
 }monstre;
 typedef struct{
     int x;
