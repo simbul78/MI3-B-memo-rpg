@@ -4,10 +4,6 @@
 
 #define FICHIER_SAVE "sauvegarde_scores.dat"
 
-/**
- * Ouvre le fichier en mode binaire lecture, remplit le tableau global,
- * puis ferme proprement le fichier.
- */
 void charger_statistiques() {
     FILE* file = fopen(FICHIER_SAVE, "rb");
     nb_joueurs_enregistres = 0;
@@ -26,10 +22,6 @@ void charger_statistiques() {
     fclose(file); // Fermeture obligatoire du fichier après lecture
 }
 
-/**
- * Ouvre le fichier en mode binaire écriture, enregistre les données à long terme,
- * puis ferme proprement le fichier.
- */
 void sauvegarder_statistiques() {
     FILE* file = fopen(FICHIER_SAVE, "wb");
     if (file == NULL) {
@@ -43,9 +35,6 @@ void sauvegarder_statistiques() {
     fclose(file); // Fermeture obligatoire du fichier après écriture
 }
 
-/**
- * Parcourt le tableau pour lier un joueur existant ou l'ajouter
- */
 ProfilJoueur* obtenir_ou_creer_profil(const char* nom_recherche) {
     // 1. Recherche si le joueur a déjà un historique
     for (int i = 0; i < nb_joueurs_enregistres; i++) {
