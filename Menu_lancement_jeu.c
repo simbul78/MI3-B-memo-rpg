@@ -1,15 +1,19 @@
 #include "fichier.h"
-#include "donnees.h"
+#include "projet.h"
 const char* noms_des_classes[] = {"Guerrier(re)", "Ranger", "Magicien(nes)", "Voleur(euse)"};
 const char* noms_monstres[] = {"Basilic", "Zombie", "Troll", "Harpie"};
 const char* noms_armes[] = {"Epee de Feu", "Baton des Familiers", "Grimoire a 5 feuilles", "Dague du Sommeil"};
-int main(){
+int configurer_partie(aventurier joueurs[]){
     int p;
     int nb_joueurs;
     int Classe;
     int resultat_scanf;
-    aventurier joueurs[4];
-    srand(time(NULL));
+    for(int i=0;i<4;i++){
+        joueurs[i].nb_coffre = 0;
+        joueurs[i].a.x = 0;
+        joueurs[i].a.y = 0;
+        joueurs[i].joueur_qui_controle = NULL;
+    }
     for(int i=0;i<7;i++){
         labyrinthe[0][i].Categorie_Carte = Bordure;
         labyrinthe[6][i].Categorie_Carte = Bordure;
@@ -105,6 +109,7 @@ int main(){
         if(Donnees_joueur[i].nom[0] == '\0') printf("X ;");
         else printf("%s ;",Donnees_joueur[i].nom);
     }
+    //fonction QUI REMPLI LE PLATEAU
     printf("\n \n Plateau : \n");
     int nb_monstres = 16;
     int nb_arme_antiques = 4;
@@ -203,7 +208,6 @@ int main(){
             }
         }    
         printf("\n");
+        return nb_joueurs;
     }
-    
-    return 0;
 }

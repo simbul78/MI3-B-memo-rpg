@@ -47,4 +47,6 @@ typedef struct{
 }Carte;
 extern Carte labyrinthe[7][7];
 extern ProfilJoueur Donnees_joueur[100];
+int configurer_partie(aventurier joueurs[]);
+void partie(aventurier joueurs[], int nb_joueurs);
 #endif
