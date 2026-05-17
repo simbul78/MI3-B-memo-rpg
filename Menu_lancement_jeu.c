@@ -13,6 +13,8 @@ int configurer_partie(aventurier joueurs[]){
         joueurs[i].a.x = 0;
         joueurs[i].a.y = 0;
         joueurs[i].joueur_qui_controle = NULL;
+        joueurs[i].booléen_arme_antique =0;
+        joueurs[i].vie_joueur = 0;
     }
     for(int i=0;i<7;i++){
         labyrinthe[0][i].Categorie_Carte = Bordure;
