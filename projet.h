@@ -6,7 +6,7 @@ typedef enum{
     
 }classe;
 typedef enum{
-    BouclierReflechissant,Torche,ArcLong,HacheEnPierre
+    BouclierReflechissant,Torche,HacheEnPierre,ArcLong
     
 }armesDeBase;
 typedef enum{
@@ -14,7 +14,7 @@ typedef enum{
     
 }armesAntiques;
 typedef enum{
-        Basilics,Zombies,Trolls,Harpies
+        Basilic,Zombie,Troll,Harpie
 }monstre;
 typedef struct{
     int x;
@@ -30,10 +30,10 @@ typedef struct{
     classe classe_joueur;
     armesDeBase arme_active;
     int nb_coffre;
-    armesAntiques Arme_legendaires;
+    int booleen_arme_antique;
     coordonnees a;
     ProfilJoueur *joueur_qui_controle;
-    
+    int vie_joueur;
 }aventurier;
 typedef enum {
     Monstre,ArmeAntiques,Totem,Portail,Coffre,Bordure
@@ -47,6 +47,7 @@ typedef struct{
 }Carte;
 extern Carte labyrinthe[7][7];
 extern ProfilJoueur Donnees_joueur[100];
+extern int nb_joueurs_enregistres; 
 int configurer_partie(aventurier joueurs[]);
 void partie(aventurier joueurs[], int nb_joueurs);
 #endif

@@ -1,7 +1,7 @@
-#ifndef FICHIER_H
-#define FICHIER_H
+#ifndef FICHIER_SAUVG_H
+#define FICHIER_SAUVG_H
 
-#include "donnees.h"
+#include "projet.h"
 
 // Charge les profils depuis le fichier au démarrage du jeu
 void charger_statistiques();

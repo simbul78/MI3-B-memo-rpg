@@ -1,5 +1,6 @@
 #include "fichier.h"
 #include "projet.h"
+#include "fichier_sauvg.h"
 const char* noms_des_classes[] = {"Guerrier(re)", "Ranger", "Magicien(nes)", "Voleur(euse)"};
 const char* noms_monstres[] = {"Basilic", "Zombie", "Troll", "Harpie"};
 const char* noms_armes[] = {"Epee de Feu", "Baton des Familiers", "Grimoire a 5 feuilles", "Dague du Sommeil"};
@@ -13,8 +14,8 @@ int configurer_partie(aventurier joueurs[]){
         joueurs[i].a.x = 0;
         joueurs[i].a.y = 0;
         joueurs[i].joueur_qui_controle = NULL;
-        joueurs[i].booléen_arme_antique =0;
-        joueurs[i].vie_joueur = 0;
+        joueurs[i].booleen_arme_antique =0;
+        joueurs[i].vie_joueur = 1;
     }
     for(int i=0;i<7;i++){
         labyrinthe[0][i].Categorie_Carte = Bordure;
@@ -43,9 +44,10 @@ int configurer_partie(aventurier joueurs[]){
     }while(p<1 || p>5);
     
     for(int i = 0; i<nb_joueurs;i++){
-        joueurs[i].joueur_qui_controle = &Donnees_joueur[i];
+        char nom_saisi[50];
         printf("joueur %d, Quel est votre nom ?", i+1);
-        scanf("%s",joueurs[i].joueur_qui_controle->nom); //voir plus tard comment rendre robuste
+        scanf("%s",nom_saisi); //voir plus tard comment rendre robuste
+        joueurs[i].joueur_qui_controle = obtenir_ou_creer_profil(nom_saisi);
         do{
             printf("%s, choisissez votre classe d'aventurier : 1/Guerrier 2/Ranger 3/Magicien 4/Voleur\n", joueurs[i].joueur_qui_controle->nom);
     
@@ -83,7 +85,7 @@ int configurer_partie(aventurier joueurs[]){
 
         }
 
-        joueurs[i].nb_coffre =0;
+        joueurs[i].nb_coffre = 0;
         switch(i){
             case 0 : 
                 joueurs[i].a.x = 0;
@@ -103,8 +105,6 @@ int configurer_partie(aventurier joueurs[]){
                 break;
 
         }
-        joueurs[i].joueur_qui_controle->parties_jouees = 0;
-        joueurs[i].joueur_qui_controle->victoires = 0;
 
     }
     for(int i = 0; i<100;i++){
@@ -157,6 +157,8 @@ int configurer_partie(aventurier joueurs[]){
                             tirage_valide = 1; 
                         }
                         break;
+                    case Bordure : // <--- AJOUTE ÇA
+                            break; 
                 }
             }while(tirage_valide == 0);
             if(labyrinthe[i][y].Categorie_Carte == Monstre){
@@ -210,6 +212,7 @@ int configurer_partie(aventurier joueurs[]){
             }
         }    
         printf("\n");
-        return nb_joueurs;
+        
     }
+    return nb_joueurs;
 }

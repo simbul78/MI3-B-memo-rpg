@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include "fichier.h"
-
+#include "projet.h"
+#include "fichier_sauvg.h"
 #define FICHIER_SAVE "sauvegarde_scores.dat"
 
 void charger_statistiques() {
     FILE* file = fopen(FICHIER_SAVE, "rb");
-    nb_joueurs_enregistres = 0;
+    
 
     // Si le fichier n'existe pas, on ne crash pas : on commence à 0 joueur
     if (file == NULL) {
