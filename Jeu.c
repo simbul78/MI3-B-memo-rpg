@@ -346,6 +346,6 @@ void partie(aventurier joueurs[],int nb_joueurs){
 
 //detail de ce qu'il reste a faire dans ce fichier :
 //   -Portail
+// - Bordure = tu reste a ta place batard
 //   -stat : nb de cases parcourues, nb de monstres tués, nb de victoires
-// système de durée
 //des variantes ??
