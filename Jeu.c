@@ -1,7 +1,7 @@
 #include "projet.h"
 #include "fichier.h"
 
-void deplacer_joueur(aventurier *joueur, int numero_joueur, int count, char direction){
+void deplacer_joueur(aventurier *joueur, char direction){
     // Les contrôles absolus : on se repère uniquement par rapport à l'écran !
     if (direction == 'z') joueur->a.x--;      // Haut (On remonte vers la ligne 0)
     else if (direction == 's') joueur->a.x++; // Bas (On descend vers la ligne 6)
@@ -225,7 +225,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                         int est_sur_la_bordure = (ancien_x == 0 || ancien_x == 6 || ancien_y == 0 || ancien_y == 6);
 
                         // 3. Demander la direction OU forcer la marche avant
-                        if (!est_sur_la_bordure) {
+                        if (!est_sur_la_bordure && (labyrinthe[x][y].Categorie_Carte != Portail)) {
                             do {
                                 printf("Vers quelle direction voulez vous aller ? (z/q/s/d) ? ");
                                 resultat_scanf = scanf(" %c", &choix_dir);
@@ -235,7 +235,26 @@ void partie(aventurier joueurs[],int nb_joueurs){
                                     printf("Erreur d'entree ! Recommencez ! ");
                                 }
                             } while (resultat_scanf != 1 || (choix_dir != 'z' && choix_dir != 'q' && choix_dir != 's' && choix_dir != 'd'));
-                        } else {
+                        }
+                        else if(!est_sur_la_bordure && (labyrinthe[x][y].Categorie_Carte == Portail)){
+                        	printf("\n Pour, rappel vous etes au portail, choississez donc les coordonnees de la carte(non revelee) que vous choisissez ! \n");
+                        	choix_dir = 'n';
+                        	do{
+                        		printf("quelle est la coordonnee x de la carte ou vous voulez aller  ?");
+                                resultat_scanf = scanf("%d",&joueurs[i].a.x);
+                                printf("quelle est la coordonnee y de la carte ou vous voulez aller  ? ?");
+                                resultat_scanf = scanf("%d",&joueurs[i].a.y);
+                                int c;
+                                while ((c = getchar()) != '\n' && c != EOF) { };
+                                if(joueurs[i].a.x <=0 || joueurs[i].a.x >=6) printf("Votre coordonnee x n'est pas valide ! \n");
+                                if(joueurs[i].a.y <=0 || joueurs[i].a.y >=6) printf("Votre coordonnee y n'est pas valide ! \n");
+                                if(labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte == 1) printf("La carte que vous vous voulez echanger est deja revele ! \n");
+                        	
+                        	
+                        	
+                        	}while(joueurs[i].a.x <=0 || joueurs[i].a.x >=6 || joueurs[i].a.y <=0 || joueurs[i].a.y >=6 || labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte == 1);
+                        }
+                        else {
                             printf("Vous rentrez dans le labyrinthe !\n");
                             // On force la touche absolue pour que le joueur aille vers le centre (x=3, y=3)
                             if (i == 0) choix_dir = 's';      // Joueur en Haut -> Force le Bas
@@ -245,8 +264,9 @@ void partie(aventurier joueurs[],int nb_joueurs){
                         }
 
                         // 4. On bouge le joueur (sur le papier)
-                        deplacer_joueur(&joueurs[i], i, compteur_tours, choix_dir);
-
+                        if(choix_dir !='n'){ //le if permet de traiter les cas ou nous ne sommes pas sur un portail a la case précédente
+                        deplacer_joueur(&joueurs[i], choix_dir);
+			}
                         // 5. L'INSPECTEUR DES COLLISIONS
                         // Est-ce qu'il essaie de retourner sur la bordure (x ou y égal à 0 ou 6) ?
                         if (joueurs[i].a.x <= 0 || joueurs[i].a.x >= 6 || joueurs[i].a.y <= 0 || joueurs[i].a.y >= 6) {
@@ -308,7 +328,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                             break;       
                         case 4 :  
                             joueurs[i].nb_coffre++;
-                            printf("C'est un trésor ! Vous l'ouvrez et prenez son contenu. Votre nb de coffre ouvert est a %d",joueurs[i].nb_coffre++);
+                            printf("C'est un trésor ! Vous l'ouvrez et prenez son contenu. Votre nb de coffre ouvert est a %d",joueurs[i].nb_coffre);
                             if(joueurs[i].booleen_arme_antique == 1 && joueurs[i].nb_coffre >= 1) {
                                 printf("\n %s a trouve l'arme et possède deja un coffre ! VICTOIRE !\n", joueurs[i].joueur_qui_controle->nom);
                                 return; // On quitte la fonction 'partie', le jeu s'arrête net.
@@ -349,7 +369,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
 
     }
 }
-}
+
 
 //detail de ce qu'il reste a faire dans ce fichier :
 //   -Portail
