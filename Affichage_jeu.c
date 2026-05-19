@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "projet-h.c"   // structures aventurier, Carte, labyrinthe... 
+#include "projet.h"   // structures aventurier, Carte, labyrinthe... 
 
 
 #define LARGEUR_CASE   7    // nb de caracteres par case du plateau       
@@ -23,14 +23,13 @@
 
 
 // Lettres des classes pour afficher le joueur sur sa case 
-static const char LETTRE_CLASSE[] = {'G', 'R', 'W', 'V'};
+ static const char LETTRE_CLASSE[] = {'G', 'R', 'W', 'V'};
 //                                   ^guerrier ^ranger ^magicien ^voleur  
 
+ static const char *NOM_CLASSE[] = {"Guerrier", "Ranger", "Magicien", "Voleur"};
 
-static const char *NOM_CLASSE[] = {"Guerrier", "Ranger", "Magicien", "Voleur"};
 
-
-static const char *NOM_ARME_BASE[] = {
+ static const char *NOM_ARME_BASE[] = {
     "Bouclier", "Torche", "Arc long", "Hache"
 };
 
@@ -216,9 +215,7 @@ static void afficher_panneau_joueur_ligne(aventurier joueurs[], int nb_joueurs,
     }
 }
 
-/* =========================================================
- *  AFFICHAGE DU LOG D'EVENEMENTS
- * ========================================================= */
+// AFFICHAGE DU LOG 
 
 static void afficher_log(void) {
     printf("\n  --- Dernieres actions ---\n");
