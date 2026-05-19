@@ -4,8 +4,22 @@
 const char* noms_des_classes[] = {"Guerrier(re)", "Ranger", "Magicien(nes)", "Voleur(euse)"};
 const char* noms_monstres[] = {"Basilic", "Zombie", "Troll", "Harpie"};
 const char* noms_armes[] = {"Epee de Feu", "Baton des Familiers", "Grimoire a 5 feuilles", "Dague du Sommeil"};
+int choix_case(){
+	int resultat_scanf;
+	do{
+        	printf("joueurs, choisissez votre case de départs (1 à 5)");
+        	resultat_scanf = scanf("%d",&p);
+        	int c;
+        	while ((c = getchar()) != '\n' && c != EOF) { }
+        	if(resultat_scanf != 1 || p<1 || p>5){
+            		printf("ERREUR ! Le numéro de la case de départs est compris entre 1 et 5 !");
+
+        	}
+        }while(p<1 || p>5);
+        return p;
+}
+	
 int configurer_partie(aventurier joueurs[]){
-    int p;
     int nb_joueurs;
     int Classe;
     int resultat_scanf;
@@ -32,17 +46,8 @@ int configurer_partie(aventurier joueurs[]){
         printf("ERREUR ! le nb de joueurs est compris entre 1 et 4 !");
         }
     }while(nb_joueurs <1  || nb_joueurs > 4);
-    do{
-        printf("joueurs, choisissez votre case de départs (1 à 5)");
-        resultat_scanf = scanf("%d",&p);
-        int c;
-        while ((c = getchar()) != '\n' && c != EOF) { }
-        if(resultat_scanf != 1 || p<1 || p>5){
-            printf("ERREUR ! Le numéro de la case de départs est compris entre 1 et 5 !");
-
-        }
-    }while(p<1 || p>5);
     
+    p = choix_case();
     for(int i = 0; i<nb_joueurs;i++){
         char nom_saisi[50];
         printf("joueur %d, Quel est votre nom ?", i+1);

@@ -154,10 +154,25 @@ void partie(aventurier joueurs[],int nb_joueurs){
                 joueurs[i].vie_joueur = 1;
                 joueurs[i].booleen_arme_antique = 0;
                 joueurs[i].nb_coffre= 0;
-                if (i == 0)      { joueurs[i].a.x = 0; joueurs[i].a.y = 3; } // Joueur 1 : En haut
-                else if (i == 1) { joueurs[i].a.x = 3; joueurs[i].a.y = 6; } // Joueur 2 : A droite
-                else if (i == 2) { joueurs[i].a.x = 6; joueurs[i].a.y = 3; } // Joueur 3 : En bas
-                else if (i == 3) { joueurs[i].a.x = 3; joueurs[i].a.y = 0; }
+                switch(i){
+            case 0 : 
+                joueurs[i].a.x = 0;
+                joueurs[i].a.y = p;
+                break;
+            case 1 : 
+                joueurs[i].a.x = p;
+                joueurs[i].a.y = 6;
+                break;
+            case 2 : 
+                joueurs[i].a.x = 6;
+                joueurs[i].a.y = p;
+                break;
+            case 3 : 
+                joueurs[i].a.x = p;
+                joueurs[i].a.y = 0;
+                break;
+
+        }
             }
             while(joueurs[i].vie_joueur ==1 ){
                 int resultat_scanf;
@@ -299,9 +314,6 @@ void partie(aventurier joueurs[],int nb_joueurs){
                                 return; // On quitte la fonction 'partie', le jeu s'arrête net.
                             }
                             break;
-                        case 5 :  
-                            printf("\n la con de ta mere c une bordure");
-                            break;
                         default:    
                             break;
                     }
@@ -341,6 +353,6 @@ void partie(aventurier joueurs[],int nb_joueurs){
 
 //detail de ce qu'il reste a faire dans ce fichier :
 //   -Portail
-// - Bordure = tu reste a ta place batard
+// -chrono
 //   -stat : nb de cases parcourues, nb de monstres tués, nb de victoires
 //des variantes ??

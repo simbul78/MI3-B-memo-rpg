@@ -45,6 +45,7 @@ typedef struct{
         int Etat_carte;
         
 }Carte;
+extern int p;
 extern Carte labyrinthe[7][7];
 extern ProfilJoueur Donnees_joueur[100];
 extern int nb_joueurs_enregistres; 

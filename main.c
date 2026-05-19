@@ -1,11 +1,10 @@
 #include "fichier.h"
 #include "projet.h"
-
+int p = 0;
 int main() {
     // Initialisation du générateur d'aléatoire 
     // (Très important si ton labyrinthe ou tes monstres sont placés au hasard dans ton menu)
     srand(time(NULL));
-
     int rejouer = 0;
 
     do {
@@ -17,7 +16,7 @@ int main() {
         printf("======================================\n\n");
 
         // 1. APPEL DE TON MENU 
-        // C'est ici que ton fichier Menu_lancement_jeu.c prend le relais pour 
+        // Le fichier Menu_lancement_jeu.c prend le relais pour 
         // initialiser la carte, créer les joueurs et renvoyer le nombre de participants.
         // (Vérifie que c'est bien le nom exact de ta fonction de menu !)
         nb_joueurs = configurer_partie(le_groupe); 
