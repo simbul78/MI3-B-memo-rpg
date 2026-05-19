@@ -1,56 +1,12 @@
 #include "projet.h"
 #include "fichier.h"
-void deplacer_joueur(aventurier *joueur,int numero_joueur,int count,char direction){
-    if(count == 1){
-        printf("Pour le premier tour vous rentrez dans le labyrinthe en avancant tout droit\n");
-        switch(numero_joueur) {
-            case 0 :   
-                joueur->a.x++;
-                break;
-            case 1 :   
-                joueur->a.y--;
-                break;
-            case 2 :   
-                joueur->a.x--;
-                break;
-            case 3 :   
-                joueur->a.y++;
-                break;
-        }
-    }
-    else{
-        switch(numero_joueur) {
-            case 0: // Part d'en haut (Regarde vers le bas)
-                if (direction == 'z') joueur->a.x++;      // Avance (descend)
-                else if (direction == 's') joueur->a.x--; // Recule (monte)
-                else if (direction == 'q') joueur->a.y++; // Gauche relative
-                else if (direction == 'd') joueur->a.y--; // Droite relative
-                break;
-            
-            case 1: // Part de droite (Regarde vers la gauche)
-                if (direction == 'z') joueur->a.y--;      // Avance (gauche)
-                else if (direction == 's') joueur->a.y++; // Recule (droite)
-                else if (direction == 'q') joueur->a.x++; // Gauche relative
-                else if (direction == 'd') joueur->a.x--; // Droite relative
-                break;
-            
-            case 2: // Part d'en bas (Regarde vers le haut)
-                if (direction == 'z') joueur->a.x--;      // Avance (monte)
-                else if (direction == 's') joueur->a.x++; // Recule (descend)
-                else if (direction == 'q') joueur->a.y--; // Gauche relative
-                else if (direction == 'd') joueur->a.y++; // Droite relative
-                break;
-            
-            case 3: // Part de gauche (Regarde vers la droite)
-                if (direction == 'z') joueur->a.y++;      // Avance (droite)
-                else if (direction == 's') joueur->a.y--; // Recule (gauche)
-                else if (direction == 'q') joueur->a.x--; // Gauche relative
-                else if (direction == 'd') joueur->a.x++; // Droite relative
-                break;
-        }
-    }
 
-
+void deplacer_joueur(aventurier *joueur, int numero_joueur, int count, char direction){
+    // Les contrôles absolus : on se repère uniquement par rapport à l'écran !
+    if (direction == 'z') joueur->a.x--;      // Haut (On remonte vers la ligne 0)
+    else if (direction == 's') joueur->a.x++; // Bas (On descend vers la ligne 6)
+    else if (direction == 'q') joueur->a.y--; // Gauche (On va vers la colonne 0)
+    else if (direction == 'd') joueur->a.y++; // Droite (On va vers la colonne 6)
 }
 void combattre_monstre(aventurier *joueur,Carte monstre){
     if(monstre.type_monstre == 0){
@@ -241,25 +197,64 @@ void partie(aventurier joueurs[],int nb_joueurs){
                         if(resultat_scanf != 1 ||   joueurs[i].arme_active <0 || joueurs[i].arme_active>3 ) printf("Il n'ya que 4 armes !! Recommencez ! ");
                     }while(resultat_scanf != 1 ||   joueurs[i].arme_active <0 || joueurs[i].arme_active>3 );
                     printf("Position actuelle : (%d, %d)\n", joueurs[i].a.x, joueurs[i].a.y);
-                    if (compteur_tours > 1) {
-                        do{
-                            printf("Vers quelle direction voulez vous aller ? (z/q/s/d) ?");
-                            resultat_scanf = scanf(" %c", &choix_dir);
-                            int c;
-                            while ((c = getchar()) != '\n' && c != EOF) { };
-                            if(resultat_scanf != 1 ||   (choix_dir != 'z' && choix_dir != 'q' && choix_dir != 's' && choix_dir != 'd')) printf("Erreur d'entrée ! Recommencez ! ");
-                        }while(resultat_scanf != 1 ||   (choix_dir != 'z' && choix_dir != 'q' && choix_dir != 's' && choix_dir != 'd'));
-                    } 
-                    else {
-                    // Si c'est le tour 1, on donne une valeur bidon à choix_dir
-                    // car la fonction deplacer_joueur va forcer l'avancée de toute façon !
-                        choix_dir = 'z'; 
-                    }
-                    do{
-                        deplacer_joueur(&joueurs[i],i,compteur_tours,choix_dir);
-                        if(labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte == 1) printf("Vous vous diriger deja vers une carte revele ! Recommencer ! \n");
-                    }while(labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte == 1);
+                    
+                    // 1. On vérifie si le joueur est sur une des 4 bordures (sa base)
+                    int mouvement_valide = 0;
+
+                    do {
+                        // 1. LE CHECKPOINT : On sauvegarde la position actuelle
+                        int ancien_x = joueurs[i].a.x;
+                        int ancien_y = joueurs[i].a.y;
+
+                        // 2. On vérifie si on part de la base
+                        int est_sur_la_bordure = (ancien_x == 0 || ancien_x == 6 || ancien_y == 0 || ancien_y == 6);
+
+                        // 3. Demander la direction OU forcer la marche avant
+                        if (!est_sur_la_bordure) {
+                            do {
+                                printf("Vers quelle direction voulez vous aller ? (z/q/s/d) ? ");
+                                resultat_scanf = scanf(" %c", &choix_dir);
+                                int c;
+                                while ((c = getchar()) != '\n' && c != EOF) { };
+                                if (resultat_scanf != 1 || (choix_dir != 'z' && choix_dir != 'q' && choix_dir != 's' && choix_dir != 'd')) {
+                                    printf("Erreur d'entree ! Recommencez ! ");
+                                }
+                            } while (resultat_scanf != 1 || (choix_dir != 'z' && choix_dir != 'q' && choix_dir != 's' && choix_dir != 'd'));
+                        } else {
+                            printf("Vous rentrez dans le labyrinthe !\n");
+                            // On force la touche absolue pour que le joueur aille vers le centre (x=3, y=3)
+                            if (i == 0) choix_dir = 's';      // Joueur en Haut -> Force le Bas
+                            else if (i == 1) choix_dir = 'q'; // Joueur à Droite -> Force la Gauche
+                            else if (i == 2) choix_dir = 'z'; // Joueur en Bas -> Force le Haut
+                            else if (i == 3) choix_dir = 'd'; // Joueur à Gauche -> Force la Droite
+                        }
+
+                        // 4. On bouge le joueur (sur le papier)
+                        deplacer_joueur(&joueurs[i], i, compteur_tours, choix_dir);
+
+                        // 5. L'INSPECTEUR DES COLLISIONS
+                        // Est-ce qu'il essaie de retourner sur la bordure (x ou y égal à 0 ou 6) ?
+                        if (joueurs[i].a.x <= 0 || joueurs[i].a.x >= 6 || joueurs[i].a.y <= 0 || joueurs[i].a.y >= 6) {
+                            printf("Aie ! Vous vous cognez contre le mur exterieur du labyrinthe ! Recommencez.\n");
+                            // ON ANNULE LE MOUVEMENT
+                            joueurs[i].a.x = ancien_x;
+                            joueurs[i].a.y = ancien_y;
+                        } 
+                        // Est-ce qu'il va sur une carte déjà retournée ?
+                        else if (labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte == 1) {
+                            printf("Vous vous dirigez vers une carte deja revelee ! Recommencez.\n");
+                            // ON ANNULE LE MOUVEMENT
+                            joueurs[i].a.x = ancien_x;
+                            joueurs[i].a.y = ancien_y;
+                        } 
+                        // Si on arrive ici, c'est que le mouvement est légal !
+                        else {
+                            mouvement_valide = 1; // On valide, ce qui va casser la boucle
+                        }
+
+                    } while (mouvement_valide == 0); // On recommence tout si le mouvement a été annulé
                     labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte = 1;
+                    printf("Position actuelle : (%d, %d)\n", joueurs[i].a.x, joueurs[i].a.y);
                     switch (labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Categorie_Carte){
                         case 0 :
                             printf("Vous tomber sur un monstre !");
