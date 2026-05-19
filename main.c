@@ -1,10 +1,14 @@
 #include "fichier.h"
 #include "projet.h"
+#include "fichier_sauvg.h"
 int p = 0;
 int main() {
     // Initialisation du générateur d'aléatoire 
     // (Très important si ton labyrinthe ou tes monstres sont placés au hasard dans ton menu)
     srand(time(NULL));
+    
+    charger_statistiques(); //charge les stats de base 
+    
     int rejouer = 0;
 
     do {
@@ -38,6 +42,8 @@ int main() {
         if (resultat != 1) rejouer = 0; 
 
     } while (rejouer == 1);
+
+      sauvegarder_statistiques();//sauvegarder les stats avant de quitter 
 
     printf("\nMerci d'avoir joue au Memo RPG ! A bientot.\n");
     return 0;
