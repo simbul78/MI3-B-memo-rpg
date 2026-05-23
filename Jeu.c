@@ -10,57 +10,57 @@ void deplacer_joueur(aventurier *joueur, char direction){
 }
 void combattre_monstre(aventurier *joueur,Carte monstre){
     if(monstre.type_monstre == 0){
-        printf("C'est un Basilic !\n");
+        log_ajouter("C'est un Basilic !\n");
         switch (joueur->arme_active)
         {
         case 0:
-            printf("Vous avez battu le Basilic !\n");
+            log_ajouter("Vous avez battu le Basilic !");
             joueur->nb_monstres_tues++;
             break;
         default:
-            printf("Vous avez perdu contre le Basilic!\n");
+            log_ajouter("Vous avez perdu contre le Basilic!");
             joueur->vie_joueur = 0;
             break;
         }
     }
     else if(monstre.type_monstre == 1){
-        printf("C'est un Zombie !\n");
+        log_ajouter("C'est un Zombie !");
         switch (joueur->arme_active)
         {
         case 1:
-            printf("Vous avez battu le Zombie!\n");
+            log_ajouter("Vous avez battu le Zombie!");
             joueur->nb_monstres_tues++;
             break;
         default:
-            printf("Vous avez perdu contre le Zombie!\n");
+            log_ajouter("Vous avez perdu contre le Zombie!");
             joueur->vie_joueur = 0;
             break;
         }
     }
     else if(monstre.type_monstre == 2){
-        printf("C'est un Troll !");
+        log_ajouter("C'est un Troll !");
         switch (joueur->arme_active)
         {
-        case 2:
-            printf("Vous avez battu le Troll!\n");
+        case 3:
+            log_ajouter("Vous avez battu le Troll!");
             joueur->nb_monstres_tues++;
             break;
         default:
-            printf("Vous avez perdu contre le Troll !\n");
+            log_ajouter("Vous avez perdu contre le Troll !");
             joueur->vie_joueur = 0;
             break;
         }
     }
     else{
-        printf("C'est une Harpie !");
+        log_ajouter("C'est une Harpie !");
         switch (joueur->arme_active)
         {
-        case 3:
-            printf("Vous avez battu la Harpie !\n");
+        case 2:
+            log_ajouter("Vous avez battu la Harpie !");
             joueur->nb_monstres_tues++;
             break;
         default:
-            printf("Vous avez perdu contre la Harpie !\n");
+            log_ajouter("Vous avez perdu contre la Harpie !");
             joueur->vie_joueur = 0;
             break;
         }
@@ -68,16 +68,16 @@ void combattre_monstre(aventurier *joueur,Carte monstre){
 }
 void arme_legendaire(aventurier *joueur,Carte arme_leg){
     if(arme_leg.Arme_legendaire== 0){
-        printf("Vous trouvez l’épée de feu\n");
+        log_ajouter("Vous trouvez l’épée de feu");
         switch(joueur->classe_joueur){
             case 0 : 
                     if(joueur->nb_coffre ==0){
-                        printf("C'est exactement ce que vous chercher ! Vous la prenez donc et continuer votre chemin\n");
+                        log_ajouter("C'est exactement ce que vous chercher ! Vous la prenez donc et continuer votre chemin");
                     }
                     joueur->booleen_arme_antique = 1;
                     break;
             default : 
-                    printf("Malheureusement, ce n'est pas l'arme que vous chercher... Vous continuer alors votre chemin...\n");
+                    log_ajouter("Malheureusement, ce n'est pas l'arme que vous chercher... Vous continuer alors votre chemin...");
                     break;
 
         }
@@ -85,47 +85,47 @@ void arme_legendaire(aventurier *joueur,Carte arme_leg){
 
     }
     else if(arme_leg.Arme_legendaire== 1){
-        printf("Vous trouvez le baton de contrôle des familiers\n");
+        log_ajouter("Vous trouvez le baton de contrôle des familiers");
         switch(joueur->classe_joueur){
             case 1 :
                     if(joueur->nb_coffre ==0){
-                        printf("C'est exactement ce que vous chercher ! Vous la prenez donc et continuer votre chemin\n");
+                        log_ajouter("C'est exactement ce que vous chercher ! Vous la prenez donc et continuer votre chemin");
                     }
                     joueur->booleen_arme_antique = 1;
                     break;
             default : 
-                    printf("Malheureusement, ce n'est pas l'arme que vous chercher... Vous continuer alors votre chemin...\n");
+                    log_ajouter("Malheureusement, ce n'est pas l'arme que vous chercher... Vous continuer alors votre chemin...");
                     break;
 
         }
         
     }
     else if(arme_leg.Arme_legendaire== 2){
-        printf("Vous trouvez le grimoire interdit !\n");
+        log_ajouter("Vous trouvez le grimoire interdit !");
         switch(joueur->classe_joueur){
             case 2 : 
                     if(joueur->nb_coffre ==0){
-                        printf("C'est exactement ce que vous chercher ! Vous la prenez donc et continuer votre chemin\n");
+                        log_ajouter("C'est exactement ce que vous chercher ! Vous la prenez donc et continuer votre chemin");
                     }
                     joueur->booleen_arme_antique = 1;
                     break;
             default : 
-                printf("Malheureusement, ce n'est pas l'arme que vous chercher... Vous continuer alors votre chemin...\n");
+                log_ajouter("Malheureusement, ce n'est pas l'arme que vous chercher... Vous continuer alors votre chemin...");
                 break;
         }
         
     }
     else if(arme_leg.Arme_legendaire== 3){
-        printf("Vous trouvez la dague de sommeil!\n");
+        log_ajouter("Vous trouvez la dague de sommeil!");
         switch(joueur->classe_joueur){
             case 3 : 
                     if(joueur->nb_coffre ==0){
-                        printf("C'est exactement ce que vous chercher ! Vous la prenez donc et continuer votre chemin\n");
+                        log_ajouter("C'est exactement ce que vous chercher ! Vous la prenez donc et continuer votre chemin");
                     }
                     joueur->booleen_arme_antique = 1;
                     break;
             default : 
-                    printf("Malheureusement, ce n'est pas l'arme que vous chercher... Vous continuer alors votre chemin...\n");
+                    log_ajouter("Malheureusement, ce n'est pas l'arme que vous chercher... Vous continuer alors votre chemin...");
                     break;
 
         }
@@ -148,7 +148,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
         printf("Round %d \n",compteur_tours);
         for(int i=0;i<nb_joueurs;i++){  
             if(joueurs[i].vie_joueur == 0){
-                printf(" %s ressuscite et revient a sa base !\n", joueurs[i].joueur_qui_controle->nom);
+                log_ajouter(" %s ressuscite et revient a sa base !", joueurs[i].joueur_qui_controle->nom);
                 joueurs[i].vie_joueur = 1;
                 joueurs[i].booleen_arme_antique = 0;
                 joueurs[i].nb_coffre= 0;
@@ -180,7 +180,10 @@ void partie(aventurier joueurs[],int nb_joueurs){
             while(joueurs[i].vie_joueur ==1 ){
                 int resultat_scanf;
                 char choix_dir;
-                printf("\nC'est au tour de %s !\n", joueurs[i].joueur_qui_controle->nom);
+                time_t temps_actuel = time(NULL);
+                int temps_s = (int)difftime(temps_actuel, debut_manche);
+                afficher_jeu(joueurs, nb_joueurs, compteur_tours, temps_s);
+                log_ajouter("C'est au tour de %s !", joueurs[i].joueur_qui_controle->nom);
                 if(joueurs[i].vie_joueur == 1){
                     // Pour rendre le code beaucoup plus lisible, on stocke x et y
                     int x = joueurs[i].a.x;
@@ -200,19 +203,20 @@ void partie(aventurier joueurs[],int nb_joueurs){
                     int droite_bloque = (y + 1 > 6) || (labyrinthe[x][y + 1].Etat_carte == 1);
 
                     if (haut_bloque && bas_bloque && gauche_bloque && droite_bloque) {
-                        printf("Vous etes piege ! Toutes les cartes autour de vous ont ete revelees ou sont des murs.\n");
+                        log_ajouter("Vous etes piege ! Toutes les cartes autour de vous ont ete revelees ou sont des murs.");
                         joueurs[i].vie_joueur = 0; 
                     }
                     
                     do{
-                        printf("De quel arme voulez vous vous équiper ? BouclierReflechissant(0),Torche(1),ArcLong(2),HacheEnPierre(3)\n");
+                        printf("De quel arme voulez vous vous équiper ? BouclierReflechissant(0),Torche(1),ArcLong(2),HacheEnPierre(3)");
+
                         resultat_scanf = scanf("%d",(int*)&joueurs[i].arme_active); //voir s'il est préférable d'entrer le nom entier de l'arme ou le numero
 
                         int c;
                         while ((c = getchar()) != '\n' && c != EOF) { }
                         if(resultat_scanf != 1 ||   joueurs[i].arme_active <0 || joueurs[i].arme_active>3 ) printf("Il n'ya que 4 armes !! Recommencez ! ");
                     }while(resultat_scanf != 1 ||   joueurs[i].arme_active <0 || joueurs[i].arme_active>3 );
-                    printf("Position actuelle : (%d, %d)\n", joueurs[i].a.x, joueurs[i].a.y);
+                    printf("Position actuelle : (%d, %d)", joueurs[i].a.x, joueurs[i].a.y);
                     
                     // 1. On vérifie si le joueur est sur une des 4 bordures (sa base)
                     int mouvement_valide = 0;
@@ -246,8 +250,8 @@ void partie(aventurier joueurs[],int nb_joueurs){
                                 resultat_scanf = scanf("%d",&joueurs[i].a.y);
                                 int c;
                                 while ((c = getchar()) != '\n' && c != EOF) { };
-                                if(joueurs[i].a.x <=0 || joueurs[i].a.x >=6) printf("Votre coordonnee x n'est pas valide ! \n");
-                                if(joueurs[i].a.y <=0 || joueurs[i].a.y >=6) printf("Votre coordonnee y n'est pas valide ! \n");
+                                if(joueurs[i].a.x <=0 || joueurs[i].a.x >=6) printf("Votre coordonnee x n'est pas valide ! ");
+                                if(joueurs[i].a.y <=0 || joueurs[i].a.y >=6) printf("Votre coordonnee y n'est pas valide ! ");
                                 if(labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte == 1) printf("La carte que vous vous voulez echanger est deja revele ! \n");
                                 
                         	
@@ -255,7 +259,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                         	}while(joueurs[i].a.x <=0 || joueurs[i].a.x >=6 || joueurs[i].a.y <=0 || joueurs[i].a.y >=6 || labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte == 1);
                         }
                         else {
-                            printf("Vous rentrez dans le labyrinthe !\n");
+                            printf("Vous rentrez dans le labyrinthe !");
                             // On force la touche absolue pour que le joueur aille vers le centre (x=3, y=3)
                             if (i == 0) choix_dir = 's';      // Joueur en Haut -> Force le Bas
                             else if (i == 1) choix_dir = 'q'; // Joueur à Droite -> Force la Gauche
@@ -270,14 +274,14 @@ void partie(aventurier joueurs[],int nb_joueurs){
                         // 5. L'INSPECTEUR DES COLLISIONS
                         // Est-ce qu'il essaie de retourner sur la bordure (x ou y égal à 0 ou 6) ?
                         if (joueurs[i].a.x <= 0 || joueurs[i].a.x >= 6 || joueurs[i].a.y <= 0 || joueurs[i].a.y >= 6) {
-                            printf("Aie ! Vous vous cognez contre le mur exterieur du labyrinthe ! Recommencez.\n");
+                            log_ajouter("Aie ! Vous vous cognez contre le mur exterieur du labyrinthe ! Recommencez.");
                             // ON ANNULE LE MOUVEMENT
                             joueurs[i].a.x = ancien_x;
                             joueurs[i].a.y = ancien_y;
                         } 
                         // Est-ce qu'il va sur une carte déjà retournée ?
                         else if (labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte == 1) {
-                            printf("Vous vous dirigez vers une carte deja revelee ! Recommencez.\n");
+                            log_ajouter("Vous vous dirigez vers une carte deja revelee ! Recommencez.");
                             // ON ANNULE LE MOUVEMENT
                             joueurs[i].a.x = ancien_x;
                             joueurs[i].a.y = ancien_y;
@@ -291,16 +295,28 @@ void partie(aventurier joueurs[],int nb_joueurs){
                     joueurs[i].en_teleportation = 0; 
                     joueurs[i].nb_cases_parcourues++;
                     labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte = 1;
-                    printf("Position actuelle : (%d, %d)\n", joueurs[i].a.x, joueurs[i].a.y);
+                    log_ajouter("Position actuelle : (%d, %d)", joueurs[i].a.x, joueurs[i].a.y);
                     switch (labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Categorie_Carte){
                         case 0 :
-                            printf("Vous tomber sur un monstre !");
+                            log_ajouter("Vous tomber sur un monstre !");
                             combattre_monstre(&joueurs[i],labyrinthe[joueurs[i].a.x][joueurs[i].a.y]);
                             break;
                         case 1 : 
                             arme_legendaire(&joueurs[i],labyrinthe[joueurs[i].a.x][joueurs[i].a.y]);
                             if(joueurs[i].booleen_arme_antique == 1 && joueurs[i].nb_coffre >= 1) {
-                                printf("\n %s a trouve l'arme et possède deja un coffre ! VICTOIRE !\n", joueurs[i].joueur_qui_controle->nom);
+                                for(int r = 1; r < 6; r++) {
+                                    for(int c = 1; c < 6; c++) {
+                                        labyrinthe[r][c].Etat_carte = 1;
+                                    }
+                                }
+    
+                                // 2. On recalcule le temps final
+                                time_t temps_actuel = time(NULL);
+                                int temps_s = (int)difftime(temps_actuel, debut_manche);
+    
+                                // 3. On appelle la fonction d'affichage pour montrer le labyrinthe ouvert !
+                                afficher_jeu(joueurs, nb_joueurs, compteur_tours, temps_s);
+                                log_ajouter(" %s a trouve l'arme et possède deja un coffre ! VICTOIRE !", joueurs[i].joueur_qui_controle->nom);
                                 joueurs[i].joueur_qui_controle->victoires ++;
                                 return; // On quitte la fonction 'partie', le jeu s'arrête net.
                             }
@@ -324,16 +340,33 @@ void partie(aventurier joueurs[],int nb_joueurs){
                             labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Categorie_Carte = labyrinthe[totem_x][totem_y].Categorie_Carte;
                             labyrinthe[totem_x][totem_y].Categorie_Carte = 2;
                             joueurs[i].vie_joueur = 0;
+                            for(int j = 1; j < 6; j++){
+                                for(int y = 1; y < 6; y++){
+                                    labyrinthe[j][y].Etat_carte = 0;
+                                }
+                            }
                             break;
                         case 3 : 
-                            printf("SWOOSH ! Tu tombes sur un Portail mysterieux !\n");
+                            log_ajouter("SWOOSH ! Tu tombes sur un Portail mysterieux !");
                             joueurs[i].en_teleportation = 1;
                             break;       
                         case 4 :  
                             joueurs[i].nb_coffre++;
-                            printf("C'est un trésor ! Vous l'ouvrez et prenez son contenu. Votre nb de coffre ouvert est a %d",joueurs[i].nb_coffre);
+                            log_ajouter("C'est un trésor ! Vous l'ouvrez et prenez son contenu. Votre nb de coffre ouvert est a %d",joueurs[i].nb_coffre);
                             if(joueurs[i].booleen_arme_antique == 1 && joueurs[i].nb_coffre >= 1) {
-                                printf("\n %s a trouve l'arme et possède deja un coffre ! VICTOIRE !\n", joueurs[i].joueur_qui_controle->nom);
+                                for(int r = 1; r < 6; r++) {
+                                    for(int c = 1; c < 6; c++) {
+                                        labyrinthe[r][c].Etat_carte = 1;
+                                    }
+                                }
+    
+                                // 2. On recalcule le temps final
+                                time_t temps_actuel = time(NULL);
+                                int temps_s = (int)difftime(temps_actuel, debut_manche);
+    
+                                // 3. On appelle la fonction d'affichage pour montrer le labyrinthe ouvert !
+                                afficher_jeu(joueurs, nb_joueurs, compteur_tours, temps_s);
+                                log_ajouter(" %s a trouve l'arme et possède deja un coffre ! VICTOIRE !", joueurs[i].joueur_qui_controle->nom);
                                 joueurs[i].joueur_qui_controle->victoires ++;
                                 return; // On quitte la fonction 'partie', le jeu s'arrête net.
                             }
@@ -341,6 +374,13 @@ void partie(aventurier joueurs[],int nb_joueurs){
                         default:    
                             break;
                     }
+                    time_t t_pause = time(NULL);
+                    afficher_jeu(joueurs, nb_joueurs, compteur_tours, (int)difftime(t_pause, debut_manche));
+                    
+                    printf("\nAction terminee. Appuyez sur [Entree] pour passer a la suite...");
+                    int c_clear;
+                    while ((c_clear = getchar()) != '\n' && c_clear != EOF) { }
+                    getchar();
                     
                     
                         
@@ -360,7 +400,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
             
             // L'astuce du "%02d" permet d'afficher un zéro devant si le chiffre est plus petit que 10 
             // (ex: 01:05:09 au lieu de 1:5:9)
-            printf("\n Fin du Round %d. ⏱ Temps ecoule : %02d:%02d:%02d\n", 
+            log_ajouter(" Fin du Round %d. ⏱ Temps ecoule : %02d:%02d:%02d", 
                    compteur_tours, heures, minutes, secondes);
         compteur_tours ++;
         }
@@ -372,5 +412,3 @@ void partie(aventurier joueurs[],int nb_joueurs){
 
 }
 
-//detail de ce qu'il reste a faire dans ce fichier :
-// -chrono
