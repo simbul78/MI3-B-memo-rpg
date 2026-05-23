@@ -249,7 +249,7 @@ static void afficher_log(void) {
  *    temps_s    : temps ecoule en secondes depuis le debut
  * ========================================================= */
 
-// PARTIE ZIAD 
+// DÉBUT PARTIE ZIAD 
 
 void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_s) {
 
@@ -319,6 +319,8 @@ void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_
     // Derniers evenements du jeu : combats, coffres, portails etc 
     afficher_log();
 }
+
+// FIN PARTIE ZIAD 
 
 
 
