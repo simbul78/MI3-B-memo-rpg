@@ -232,3 +232,31 @@ static void afficher_log(void) {
         printf("  > %s\n", log_jeu.lignes[i]);
     }
 }
+
+/* =========================================================
+ *  AFFICHAGE STATISTIQUES DES JOUEURS (stats longue duree)
+ * ========================================================= */
+void afficher_scores(void) {
+    extern int nb_joueurs_enregistres;
+
+    printf("\033[2J\033[H");
+    printf("========================================\n");
+    printf("           STATISTIQUES DES JOUEURS                 \n");
+    printf("========================================\n");
+    printf("  %-20s  %7s  %9s\n", "Nom", "Parties", "Victoires");
+    printf("  %-20s  %7s  %9s\n",
+           "--------------------", "-------", "---------");
+
+    if (nb_joueurs_enregistres == 0) {
+        printf("  (aucun joueur enregistre)\n");
+    } else {
+        for (int i = 0; i < nb_joueurs_enregistres; i++) {
+            printf("  %-20s  %7d  %9d\n",
+                   Donnees_joueur[i].nom,
+                   Donnees_joueur[i].parties_jouees,
+                   Donnees_joueur[i].victoires);
+        }
+    }
+
+    printf("========================================\n\n");
+}
