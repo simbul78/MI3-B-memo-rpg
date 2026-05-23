@@ -218,6 +218,35 @@ static void afficher_panneau_joueur_ligne(aventurier joueurs[], int nb_joueurs,
     }
 }
 
+// AFFICHAGE DU LOG 
+
+static void afficher_log(void) {
+    printf("\n  --- Dernieres actions ---\n");
+    if (log_jeu.nb == 0) {
+        printf("  (aucune action pour le moment)\n");
+        return;
+    }
+    for (int i = 0; i < log_jeu.nb; i++) {
+        printf("  > %s\n", log_jeu.lignes[i]);
+    }
+}
+
+/* =========================================================
+ *  FONCTION PRINCIPALE : afficher_jeu()
+ *
+ *  Efface le terminal, affiche :
+ *    - le titre et le temps ecoule
+ *    - le plateau 7x7 avec les joueurs
+ *    - le panneau joueurs sur la droite (aligne)
+ *    - le log des evenements en dessous
+ *
+ *  Parametres :
+ *    joueurs    : tableau des aventuriers
+ *    nb_joueurs : nombre de joueurs actifs
+ *    nb_tours   : numero du tour actuel
+ *    temps_s    : temps ecoule en secondes depuis le debut
+ * ========================================================= */
+
 /* =========================================================
  *  AFFICHAGE DU LOG D'EVENEMENTS
  * ========================================================= */
