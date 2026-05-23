@@ -254,6 +254,7 @@ void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_
 
    // On efface le terminal pour rafraichir l'ecran 
     printf("\033[H\033[2J");
+    fflush(stdout);
 
     // pour afficher le temps de la partie 
     int mm = temps_s / 60;
