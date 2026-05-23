@@ -15,6 +15,7 @@ void combattre_monstre(aventurier *joueur,Carte monstre){
         {
         case 0:
             printf("Vous avez battu le Basilic !\n");
+            joueur->nb_monstres_tues++;
             break;
         default:
             printf("Vous avez perdu contre le Basilic!\n");
@@ -28,6 +29,7 @@ void combattre_monstre(aventurier *joueur,Carte monstre){
         {
         case 1:
             printf("Vous avez battu le Zombie!\n");
+            joueur->nb_monstres_tues++;
             break;
         default:
             printf("Vous avez perdu contre le Zombie!\n");
@@ -41,10 +43,7 @@ void combattre_monstre(aventurier *joueur,Carte monstre){
         {
         case 2:
             printf("Vous avez battu le Troll!\n");
-            break;
-        case 3:
-            printf("Vous avez perdu contre le Troll !\n");
-            joueur->vie_joueur = 0;
+            joueur->nb_monstres_tues++;
             break;
         default:
             printf("Vous avez perdu contre le Troll !\n");
@@ -58,6 +57,7 @@ void combattre_monstre(aventurier *joueur,Carte monstre){
         {
         case 3:
             printf("Vous avez battu la Harpie !\n");
+            joueur->nb_monstres_tues++;
             break;
         default:
             printf("Vous avez perdu contre la Harpie !\n");
@@ -138,22 +138,25 @@ void arme_legendaire(aventurier *joueur,Carte arme_leg){
 
 }
 void partie(aventurier joueurs[],int nb_joueurs){
+    for(int i=0;i<nb_joueurs;i++){
+    joueurs[i].joueur_qui_controle->parties_jouees++;
+    }
     int partie_termine= 0;
     int compteur_tours = 1;
     while(partie_termine == 0){
         time_t debut_manche = time(NULL);
         printf("Round %d \n",compteur_tours);
-        for(int i=0;i<nb_joueurs;i++){
-            for(int j = 1; j<6;j++){
-                for(int y = 1; y<6; y++){
-                    labyrinthe[j][y].Etat_carte = 0;
-                }
-            }   
+        for(int i=0;i<nb_joueurs;i++){  
             if(joueurs[i].vie_joueur == 0){
                 printf(" %s ressuscite et revient a sa base !\n", joueurs[i].joueur_qui_controle->nom);
                 joueurs[i].vie_joueur = 1;
                 joueurs[i].booleen_arme_antique = 0;
                 joueurs[i].nb_coffre= 0;
+                for(int j = 1; j<6;j++){
+                    for(int y = 1; y<6; y++){
+                        labyrinthe[j][y].Etat_carte = 0;
+                    }
+                } 
                 switch(i){
             case 0 : 
                 joueurs[i].a.x = 0;
@@ -196,8 +199,6 @@ void partie(aventurier joueurs[],int nb_joueurs){
                     // Pareil pour la DROITE
                     int droite_bloque = (y + 1 > 6) || (labyrinthe[x][y + 1].Etat_carte == 1);
 
-
-                    // Et maintenant, le test final devient d'une simplicité absolue !
                     if (haut_bloque && bas_bloque && gauche_bloque && droite_bloque) {
                         printf("Vous etes piege ! Toutes les cartes autour de vous ont ete revelees ou sont des murs.\n");
                         joueurs[i].vie_joueur = 0; 
@@ -225,7 +226,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                         int est_sur_la_bordure = (ancien_x == 0 || ancien_x == 6 || ancien_y == 0 || ancien_y == 6);
 
                         // 3. Demander la direction OU forcer la marche avant
-                        if (!est_sur_la_bordure && (labyrinthe[x][y].Categorie_Carte != Portail)) {
+                        if (!est_sur_la_bordure && joueurs[i].en_teleportation != 1) {
                             do {
                                 printf("Vers quelle direction voulez vous aller ? (z/q/s/d) ? ");
                                 resultat_scanf = scanf(" %c", &choix_dir);
@@ -236,9 +237,8 @@ void partie(aventurier joueurs[],int nb_joueurs){
                                 }
                             } while (resultat_scanf != 1 || (choix_dir != 'z' && choix_dir != 'q' && choix_dir != 's' && choix_dir != 'd'));
                         }
-                        else if(!est_sur_la_bordure && (labyrinthe[x][y].Categorie_Carte == Portail)){
+                        else if(!est_sur_la_bordure && joueurs[i].en_teleportation == 1){
                         	printf("\n Pour, rappel vous etes au portail, choississez donc les coordonnees de la carte(non revelee) que vous choisissez ! \n");
-                        	choix_dir = 'n';
                         	do{
                         		printf("quelle est la coordonnee x de la carte ou vous voulez aller  ?");
                                 resultat_scanf = scanf("%d",&joueurs[i].a.x);
@@ -249,7 +249,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                                 if(joueurs[i].a.x <=0 || joueurs[i].a.x >=6) printf("Votre coordonnee x n'est pas valide ! \n");
                                 if(joueurs[i].a.y <=0 || joueurs[i].a.y >=6) printf("Votre coordonnee y n'est pas valide ! \n");
                                 if(labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte == 1) printf("La carte que vous vous voulez echanger est deja revele ! \n");
-                        	
+                                
                         	
                         	
                         	}while(joueurs[i].a.x <=0 || joueurs[i].a.x >=6 || joueurs[i].a.y <=0 || joueurs[i].a.y >=6 || labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte == 1);
@@ -264,9 +264,9 @@ void partie(aventurier joueurs[],int nb_joueurs){
                         }
 
                         // 4. On bouge le joueur (sur le papier)
-                        if(choix_dir !='n'){ //le if permet de traiter les cas ou nous ne sommes pas sur un portail a la case précédente
-                        deplacer_joueur(&joueurs[i], choix_dir);
-			}
+                        if(joueurs[i].en_teleportation != 1){ //le if permet de traiter les cas ou nous ne sommes pas sur un portail a la case précédente
+                            deplacer_joueur(&joueurs[i], choix_dir);
+			            }
                         // 5. L'INSPECTEUR DES COLLISIONS
                         // Est-ce qu'il essaie de retourner sur la bordure (x ou y égal à 0 ou 6) ?
                         if (joueurs[i].a.x <= 0 || joueurs[i].a.x >= 6 || joueurs[i].a.y <= 0 || joueurs[i].a.y >= 6) {
@@ -287,7 +287,9 @@ void partie(aventurier joueurs[],int nb_joueurs){
                             mouvement_valide = 1; // On valide, ce qui va casser la boucle
                         }
 
-                    } while (mouvement_valide == 0); // On recommence tout si le mouvement a été annulé
+                    } while (mouvement_valide == 0);// On recommence tout si le mouvement a été annulé
+                    joueurs[i].en_teleportation = 0; 
+                    joueurs[i].nb_cases_parcourues++;
                     labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte = 1;
                     printf("Position actuelle : (%d, %d)\n", joueurs[i].a.x, joueurs[i].a.y);
                     switch (labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Categorie_Carte){
@@ -299,6 +301,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                             arme_legendaire(&joueurs[i],labyrinthe[joueurs[i].a.x][joueurs[i].a.y]);
                             if(joueurs[i].booleen_arme_antique == 1 && joueurs[i].nb_coffre >= 1) {
                                 printf("\n %s a trouve l'arme et possède deja un coffre ! VICTOIRE !\n", joueurs[i].joueur_qui_controle->nom);
+                                joueurs[i].joueur_qui_controle->victoires ++;
                                 return; // On quitte la fonction 'partie', le jeu s'arrête net.
                             }
                             
@@ -323,14 +326,15 @@ void partie(aventurier joueurs[],int nb_joueurs){
                             joueurs[i].vie_joueur = 0;
                             break;
                         case 3 : 
-                            printf("SWOOSH ! Tu tombes sur un Portail mysterieux (pouvoir en construction) !\n");
-                            //return;
+                            printf("SWOOSH ! Tu tombes sur un Portail mysterieux !\n");
+                            joueurs[i].en_teleportation = 1;
                             break;       
                         case 4 :  
                             joueurs[i].nb_coffre++;
                             printf("C'est un trésor ! Vous l'ouvrez et prenez son contenu. Votre nb de coffre ouvert est a %d",joueurs[i].nb_coffre);
                             if(joueurs[i].booleen_arme_antique == 1 && joueurs[i].nb_coffre >= 1) {
                                 printf("\n %s a trouve l'arme et possède deja un coffre ! VICTOIRE !\n", joueurs[i].joueur_qui_controle->nom);
+                                joueurs[i].joueur_qui_controle->victoires ++;
                                 return; // On quitte la fonction 'partie', le jeu s'arrête net.
                             }
                             break;
@@ -359,20 +363,14 @@ void partie(aventurier joueurs[],int nb_joueurs){
             printf("\n Fin du Round %d. ⏱ Temps ecoule : %02d:%02d:%02d\n", 
                    compteur_tours, heures, minutes, secondes);
         compteur_tours ++;
-    }
-    for(int i=1;i<6;i++){
-        for(int j=1;j<6;j++){
-            labyrinthe[i][j].Etat_carte = 0;
         }
-    }
     
 
     }
+    
 }
 
+}
 
 //detail de ce qu'il reste a faire dans ce fichier :
-//   -Portail
 // -chrono
-//   -stat : nb de cases parcourues, nb de monstres tués, nb de victoires
-//des variantes ??

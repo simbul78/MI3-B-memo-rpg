@@ -6,7 +6,7 @@ typedef enum{
     
 }classe;
 typedef enum{
-    BouclierReflechissant,Torche,HacheEnPierre,ArcLong
+    BouclierReflechissant,Torche,ArcLong,HacheEnPierre
     
 }armesDeBase;
 typedef enum{
@@ -31,9 +31,12 @@ typedef struct{
     armesDeBase arme_active;
     int nb_coffre;
     int booleen_arme_antique;
+    int en_teleportation;
     coordonnees a;
     ProfilJoueur *joueur_qui_controle;
     int vie_joueur;
+    int nb_cases_parcourues;
+    int nb_monstres_tues;
 }aventurier;
 typedef enum {
     Monstre,ArmeAntiques,Totem,Portail,Coffre,Bordure

@@ -30,6 +30,9 @@ int configurer_partie(aventurier joueurs[]){
         joueurs[i].joueur_qui_controle = NULL;
         joueurs[i].booleen_arme_antique =0;
         joueurs[i].vie_joueur = 1;
+        joueurs[i].en_teleportation = 0;
+        joueurs[i].nb_monstres_tues = 0;
+        joueurs[i].nb_cases_parcourues = 0;
     }
     for(int i=0;i<7;i++){
         labyrinthe[0][i].Categorie_Carte = Bordure;
