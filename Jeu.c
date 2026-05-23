@@ -148,7 +148,9 @@ void partie(aventurier joueurs[],int nb_joueurs){
         printf("Round %d \n",compteur_tours);
         for(int i=0;i<nb_joueurs;i++){  
             if(joueurs[i].vie_joueur == 0){
-                log_ajouter(" %s ressuscite et revient a sa base !", joueurs[i].joueur_qui_controle->nom);
+                char buffer[100];
+                snprintf(buffer, 100, "%s ressuscite et revient a sa base !", joueurs[i].joueur_qui_controle->nom);
+                log_ajouter(buffer);
                 joueurs[i].vie_joueur = 1;
                 joueurs[i].booleen_arme_antique = 0;
                 joueurs[i].nb_coffre= 0;
@@ -183,7 +185,9 @@ void partie(aventurier joueurs[],int nb_joueurs){
                 time_t temps_actuel = time(NULL);
                 int temps_s = (int)difftime(temps_actuel, debut_manche);
                 afficher_jeu(joueurs, nb_joueurs, compteur_tours, temps_s);
-                log_ajouter("C'est au tour de %s !", joueurs[i].joueur_qui_controle->nom);
+                char buffer[100]; // Création d'une boîte temporaire
+                snprintf(buffer, 100, "C'est au tour de %s !", joueurs[i].joueur_qui_controle->nom);
+                log_ajouter(buffer); // On envoie la boîte remplie au log
                 if(joueurs[i].vie_joueur == 1){
                     // Pour rendre le code beaucoup plus lisible, on stocke x et y
                     int x = joueurs[i].a.x;
@@ -216,7 +220,8 @@ void partie(aventurier joueurs[],int nb_joueurs){
                         while ((c = getchar()) != '\n' && c != EOF) { }
                         if(resultat_scanf != 1 ||   joueurs[i].arme_active <0 || joueurs[i].arme_active>3 ) printf("Il n'ya que 4 armes !! Recommencez ! ");
                     }while(resultat_scanf != 1 ||   joueurs[i].arme_active <0 || joueurs[i].arme_active>3 );
-                    printf("Position actuelle : (%d, %d)", joueurs[i].a.x, joueurs[i].a.y);
+                    snprintf(buffer, 100, "Position actuelle : (%d, %d)", joueurs[i].a.x, joueurs[i].a.y);
+                    log_ajouter(buffer);;
                     
                     // 1. On vérifie si le joueur est sur une des 4 bordures (sa base)
                     int mouvement_valide = 0;
@@ -295,7 +300,8 @@ void partie(aventurier joueurs[],int nb_joueurs){
                     joueurs[i].en_teleportation = 0; 
                     joueurs[i].nb_cases_parcourues++;
                     labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte = 1;
-                    log_ajouter("Position actuelle : (%d, %d)", joueurs[i].a.x, joueurs[i].a.y);
+                    snprintf(buffer, 100, "Position actuelle : (%d, %d)", joueurs[i].a.x, joueurs[i].a.y);
+                    log_ajouter(buffer);
                     switch (labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Categorie_Carte){
                         case 0 :
                             log_ajouter("Vous tomber sur un monstre !");
@@ -316,7 +322,9 @@ void partie(aventurier joueurs[],int nb_joueurs){
     
                                 // 3. On appelle la fonction d'affichage pour montrer le labyrinthe ouvert !
                                 afficher_jeu(joueurs, nb_joueurs, compteur_tours, temps_s);
-                                log_ajouter(" %s a trouve l'arme et possède deja un coffre ! VICTOIRE !", joueurs[i].joueur_qui_controle->nom);
+                                char buffer[150];
+                                snprintf(buffer, 150, "%s a trouve l'arme et possède deja un coffre ! VICTOIRE !", joueurs[i].joueur_qui_controle->nom);
+                                log_ajouter(buffer);
                                 joueurs[i].joueur_qui_controle->victoires ++;
                                 return; // On quitte la fonction 'partie', le jeu s'arrête net.
                             }
@@ -352,7 +360,9 @@ void partie(aventurier joueurs[],int nb_joueurs){
                             break;       
                         case 4 :  
                             joueurs[i].nb_coffre++;
-                            log_ajouter("C'est un trésor ! Vous l'ouvrez et prenez son contenu. Votre nb de coffre ouvert est a %d",joueurs[i].nb_coffre);
+                            char buffer[100];
+                            snprintf(buffer, 100, "C'est un trésor ! Vous l'ouvrez et prenez son contenu. Votre nb de coffre ouvert est a %d", joueurs[i].nb_coffre);
+                            log_ajouter(buffer);
                             if(joueurs[i].booleen_arme_antique == 1 && joueurs[i].nb_coffre >= 1) {
                                 for(int r = 1; r < 6; r++) {
                                     for(int c = 1; c < 6; c++) {
@@ -363,10 +373,14 @@ void partie(aventurier joueurs[],int nb_joueurs){
                                 // 2. On recalcule le temps final
                                 time_t temps_actuel = time(NULL);
                                 int temps_s = (int)difftime(temps_actuel, debut_manche);
-    
+                                int heures = temps_s / 3600;
+                                int minutes = (temps_s % 3600) / 60;
+                                int secondes = temps_s % 60;
                                 // 3. On appelle la fonction d'affichage pour montrer le labyrinthe ouvert !
                                 afficher_jeu(joueurs, nb_joueurs, compteur_tours, temps_s);
-                                log_ajouter(" %s a trouve l'arme et possède deja un coffre ! VICTOIRE !", joueurs[i].joueur_qui_controle->nom);
+                                char buffer[100];
+                                snprintf(buffer, 100, "Fin du Round %d. Temps ecoule : %02d:%02d:%02d", compteur_tours, heures, minutes, secondes);
+                                log_ajouter(buffer);
                                 joueurs[i].joueur_qui_controle->victoires ++;
                                 return; // On quitte la fonction 'partie', le jeu s'arrête net.
                             }
@@ -400,8 +414,9 @@ void partie(aventurier joueurs[],int nb_joueurs){
             
             // L'astuce du "%02d" permet d'afficher un zéro devant si le chiffre est plus petit que 10 
             // (ex: 01:05:09 au lieu de 1:5:9)
-            log_ajouter(" Fin du Round %d. ⏱ Temps ecoule : %02d:%02d:%02d", 
-                   compteur_tours, heures, minutes, secondes);
+            char buffer[100];
+            snprintf(buffer, 100, "Fin du Round %d. Temps ecoule : %02d:%02d:%02d", compteur_tours, heures, minutes, secondes);
+            log_ajouter(buffer);
         compteur_tours ++;
         }
     

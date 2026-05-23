@@ -58,4 +58,5 @@ int configurer_partie(aventurier joueurs[]);
 void partie(aventurier joueurs[], int nb_joueurs);
 void log_ajouter(const char *message);
 void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_s);
+
 #endif

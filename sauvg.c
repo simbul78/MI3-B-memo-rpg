@@ -5,8 +5,6 @@
 #include "fichier_sauvg.h"
 #define FICHIER_SAVE "sauvegarde_scores.dat"
 
-ProfilJoueur Donnees_joueur[100];
-int nb_joueurs_enregistres = 0;
 void charger_statistiques() {
     FILE* file = fopen(FICHIER_SAVE, "rb");
     

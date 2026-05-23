@@ -12,7 +12,7 @@ int main() {
     int rejouer = 0;
 
     do {
-        aventurier le_groupe[4]; // Le tableau qui va contenir jusqu'à 4 joueurs
+        aventurier joueurs[4]; // Le tableau qui va contenir jusqu'à 4 joueurs
         int nb_joueurs = 0;
 
         printf("\n======================================\n");
@@ -23,12 +23,12 @@ int main() {
         // Le fichier Menu_lancement_jeu.c prend le relais pour 
         // initialiser la carte, créer les joueurs et renvoyer le nombre de participants.
         // (Vérifie que c'est bien le nom exact de ta fonction de menu !)
-        nb_joueurs = configurer_partie(le_groupe); 
+        nb_joueurs = configurer_partie(joueurs); 
 
         // 2. LANCEMENT DU JEU
         // Si le menu s'est bien passé et qu'il y a des joueurs, on lance le combat !
         if (nb_joueurs > 0) {
-            partie(le_groupe, nb_joueurs);
+            partie(joueurs, nb_joueurs);
         }
 
         // 3. LA BOUCLE DE REPLAY
