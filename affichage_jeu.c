@@ -246,20 +246,96 @@ static void afficher_log(void) {
  *    nb_tours   : numero du tour actuel
  *    temps_s    : temps ecoule en secondes depuis le debut
  * ========================================================= */
+void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_s) {
 
-/* =========================================================
- *  AFFICHAGE DU LOG D'EVENEMENTS
- * ========================================================= */
 
-static void afficher_log(void) {
-    printf("\n  --- Dernieres actions ---\n");
-    if (log_jeu.nb == 0) {
-        printf("  (aucune action pour le moment)\n");
-        return;
+    printf("\033[2J\033[H");
+
+    //  Titre 
+    printf("========================================\n");
+    printf("          MEMO-RPG  |  Tour %-3d          \n", nb_tours);
+    printf("  Temps ecoule : %02d:%02d                  \n",
+           temps_s / 60, temps_s % 60);
+    printf("========================================\n\n");
+
+    /*
+     * Affichage cote a cote :
+     *   plateau (7 colonnes x 7 lignes) | panneau joueurs
+     *
+     * On parcourt les lignes du plateau (y de 0 a 6).
+     * A chaque rangee on affiche aussi la ligne correspondante
+     * du panneau joueurs.
+     *
+     * Chaque rangee = 1 ligne separateur + 1 ligne de cases.
+     * Total lignes d'affichage = 7 * 2 + 1 = 15 lignes.
+     * Le panneau joueurs occupe au plus 15 lignes aussi.
+     */
+
+    int ligne_panneau = 0;
+
+    for (int y = 0; y < 7; y++) {
+
+// Ligne separateur haut de la rangee 
+        afficher_separateur_ligne(y);
+// Panneau joueur sur la meme ligne 
+        afficher_panneau_joueur_ligne(joueurs, nb_joueurs, nb_tours, ligne_panneau++);
+        printf("\n");
+
+// Ligne des cases 
+        for (int x = 0; x < 7; x++) {
+            int idx_j = joueur_sur_case(joueurs, nb_joueurs, x, y);
+            afficher_case(labyrinthe[y][x], idx_j, x, y);
+        }
+        printf("  ");
+// Panneau joueur sur la meme ligne 
+        afficher_panneau_joueur_ligne(joueurs, nb_joueurs, nb_tours, ligne_panneau++);
+        printf("\n");
     }
-    for (int i = 0; i < log_jeu.nb; i++) {
-        printf("  > %s\n", log_jeu.lignes[i]);
+
+// Derniere ligne separateur bas du plateau 
+    afficher_separateur_ligne(6);
+    printf("\n");
+
+// Legende
+    printf("  Legende : [?]=cache  [B]=Basilic [Z]=Zombie [T]=Troll [H]=Harpie\n");
+    printf("            [A]=Arme antique  [C]=Coffre  [P]=Portail  [O]=Totem\n");
+    printf("            [G]=Guerrier [R]=Ranger [W]=Magicien [V]=Voleur\n\n");
+
+// Log des evenements 
+    afficher_log();
+
+    printf("\n");
+}
+
+
+//  AFFICHAGE FIN DE PARTIE
+ 
+// Revele tout le plateau et affiche le gagnant.
+
+void afficher_fin_partie(aventurier joueurs[], int nb_joueurs,
+                         int nb_tours, int temps_s,
+                         int idx_gagnant) {
+
+// Revele toutes les cartes 
+    for (int y = 1; y <= 5; y++)
+        for (int x = 1; x <= 5; x++)
+            labyrinthe[y][x].Etat_carte = 1;
+
+// Affiche le plateau final 
+
+    afficher_jeu(joueurs, nb_joueurs, nb_tours, temps_s);
+
+    printf("========================================\n");
+    if (idx_gagnant >= 0 && joueurs[idx_gagnant].joueur_qui_controle != NULL) {
+        printf("  VICTOIRE de %s (%s) !\n",
+               joueurs[idx_gagnant].joueur_qui_controle->nom,
+               NOM_CLASSE[joueurs[idx_gagnant].classe_joueur]);
+    } else {
+        printf("  Partie terminee - aucun vainqueur.\n");
     }
+    printf("  Duree : %02d:%02d  |  Tours joues : %d\n",
+           temps_s / 60, temps_s % 60, nb_tours);
+    printf("========================================\n\n");
 }
 
 /* =========================================================
@@ -289,3 +365,4 @@ void afficher_scores(void) {
 
     printf("========================================\n\n");
 }
+
