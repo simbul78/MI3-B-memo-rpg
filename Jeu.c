@@ -10,7 +10,7 @@ void deplacer_joueur(aventurier *joueur, char direction){
 }
 void combattre_monstre(aventurier *joueur,Carte monstre){
     if(monstre.type_monstre == 0){
-        log_ajouter("C'est un Basilic !\n");
+        log_ajouter("C'est un Basilic !");
         switch (joueur->arme_active)
         {
         case 0:

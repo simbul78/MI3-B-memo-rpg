@@ -1,6 +1,8 @@
 #ifndef donnees_h
 #define donnees_h
 
+#define NB_RANGEES 7
+#define NB_COLONNES 7
 typedef enum{
     guerrier,ranger,magicien,voleur
     
@@ -51,7 +53,9 @@ typedef struct{
 extern int p;
 extern Carte labyrinthe[7][7];
 extern ProfilJoueur Donnees_joueur[100];
-extern int nb_joueurs_enregistres; 
+extern int nb_joueurs_enregistres;
 int configurer_partie(aventurier joueurs[]);
 void partie(aventurier joueurs[], int nb_joueurs);
+void log_ajouter(const char *message);
+void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_s);
 #endif
