@@ -9,8 +9,28 @@
 
 #define LARGEUR_CASE   7    // nb de caracteres par case du plateau       
 #define LOG_MAX_LIGNES 6    // nb de lignes conservees dans le log        
-#define LOG_MAX_CHARS  60   // longueur max d'une ligne de log            
+#define LOG_MAX_CHARS  60   // longueur max d'une ligne de log     
 
+//  CODES COULEURS ANSI
+
+#define ROUGE       "\033[31m"
+#define BLEU        "\033[34m"
+#define JAUNE       "\033[33m"
+#define VIOLET      "\033[35m"
+#define RESET       "\033[0m"   // remet la couleur par defaut
+ 
+
+//  EMOJIS DES JOUEURS (un par joueur)
+
+//  Joueur 0 (Guerrier)  → 🔴
+//  Joueur 1 (Ranger)    → 🔵
+//  Joueur 2 (Magicien)  → 🟡
+//  Joueur 3 (Voleur)    → 🟣
+ 
+static const char *EMOJI_JOUEUR[] = {"🔴", "🔵", "🟡", "🟣"};
+static const char *COULEUR_JOUEUR[] = {ROUGE, BLEU, JAUNE, VIOLET};
+
+//  NOMS
 
 //  Carte cachee   :  [ ? ]
 //  Monstre        :  [ M ]   (Basilic=B  Zombie=Z  Troll=T  Harpie=H)
@@ -118,26 +138,63 @@ static char symbole_case(Carte c) {
 // Si la case est une Bordure, on affiche des espaces.
  
 static void afficher_case(Carte c, int idx_joueur, int x, int y) {
-    // Case bordure = vide (cases en dehors du labyrinthe 5x5) 
+ 
+    // Case bordure = vide (hors du labyrinthe 5x5)
     if (c.Categorie_Carte == Bordure) {
-        printf("       "); // 7 espaces 
+        printf("        "); 
+     // 8 espaces pour compenser la largeur des emojis
         return;
     }
-
-    // Un joueur est present sur cette case 
+ 
+    // Un joueur est present sur cette case : affiche son emoji avec sa couleur
     if (idx_joueur >= 0) {
-        printf("[ %c ]  ", LETTRE_CLASSE[idx_joueur]);
+        printf("%s[%s]%s  ",
+               COULEUR_JOUEUR[idx_joueur],
+               EMOJI_JOUEUR[idx_joueur],
+               RESET);
         return;
     }
-
-    //Case cachee 
+ 
+    // Case cachee
     if (c.Etat_carte == 0) {
-        printf("[ ? ]  ");
+        printf("[❓]  ");
         return;
     }
 
-    // Case revelee 
-    printf("[ %c ]  ", symbole_case(c));
+    // Un joueur est present sur cette case
+    if (idx_joueur >= 0) {
+        switch(idx_joueur) {
+            case 0: printf(ROUGE  "[ 🔴 ]" RESET "  "); break;
+            case 1: printf(BLEU   "[ 🔵 ]" RESET "  "); break;
+            case 2: printf(JAUNE  "[ 🟡 ]" RESET "  "); break;
+            case 3: printf(VIOLET "[ 🟣 ]" RESET "  "); break;
+        }
+        return;
+    }
+
+    // Case cachee
+    if (c.Etat_carte == 0) {
+        printf("[ ❓ ]  ");
+        return;
+    }
+
+    // Case revelee : affiche l'emoji selon le contenu
+    switch (c.Categorie_Carte) {
+        case Monstre:
+            switch (c.type_monstre) {
+                case Basilic: printf("[ 🐍 ]  "); break;
+                case Zombie:  printf("[ 🧟 ]  "); break;
+                case Troll:   printf("[ 👹 ]  "); break;
+                case Harpie:  printf("[ 🦅 ]  "); break;
+                default:      printf("[ ❓ ]  "); break;
+            }
+            break;
+        case ArmeAntiques: printf("[ ⚔️  ]  "); break;
+        case Totem:        printf("[ 🗿 ]  "); break;
+        case Portail:      printf("[ 🌀 ]  "); break;
+        case Coffre:       printf("[ 📦 ]  "); break;
+        default:           printf("       ");   break;
+    }
 }
 
 
@@ -311,10 +368,11 @@ void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_
 
     // Rappel des symboles pour que le joueur ou faut qu'on ajoute des images !!!
     printf("-- Legende --\n");
-    printf("  [B] Basilic   [Z] Zombie   [T] Troll   [H] Harpie\n");
-    printf("  [A] Arme ant. [C] Coffre   [P] Portail [O] Totem\n");
-    printf("  [?] Case cachee\n\n");
-
+printf("  🐍 Basilic   🧟 Zombie   👹 Troll   🦅 Harpie\n");
+printf("  ⚔️  Arme ant.  📦 Coffre   🌀 Portail  🗿 Totem\n");
+printf("  ❓ Case cachee\n");
+printf("  🔴 Joueur 1   🔵 Joueur 2   🟡 Joueur 3   🟣 Joueur 4\n\n");
+ 
     // Derniers evenements du jeu : combats, coffres, portails etc 
     afficher_log();
 }
