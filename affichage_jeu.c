@@ -220,9 +220,7 @@ static void afficher_panneau_joueur_ligne(aventurier joueurs[], int nb_joueurs,
 
 // AFFICHAGE DU LOG 
 
-void log_ajouter(const char *message) {
-    // stocke le message dans log_jeu.lignes[]
-}
+
 
 static void afficher_log(void) {
     printf("\n  --- Dernieres actions ---\n");
