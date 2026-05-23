@@ -246,17 +246,20 @@ static void afficher_log(void) {
  *    nb_tours   : numero du tour actuel
  *    temps_s    : temps ecoule en secondes depuis le debut
  * ========================================================= */
+
+// PARTIE ZIAD 
+
 void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_s) {
 
 
-    printf("\033[2J\033[H");
+   // On efface le terminal pour rafraichir l'ecran 
+    printf("\033[H\033[2J");
 
-    //  Titre 
-    printf("========================================\n");
-    printf("          MEMO-RPG  |  Tour %-3d          \n", nb_tours);
-    printf("  Temps ecoule : %02d:%02d                  \n",
-           temps_s / 60, temps_s % 60);
-    printf("========================================\n\n");
+    // pour afficher le temps de la partie 
+    int mm = temps_s / 60;
+    int ss = temps_s % 60;
+    printf("=== MEMO-RPG === Tour : %d   Temps : %02d:%02d\n\n", nb_tours, mm, ss);
+
 
     /*
      * Affichage cote a cote :
@@ -271,41 +274,50 @@ void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_
      * Le panneau joueurs occupe au plus 15 lignes aussi.
      */
 
+  // les infos joueurs a droite sur la bonne ligne
     int ligne_panneau = 0;
 
-    for (int y = 0; y < 7; y++) {
+    for (int rangee = 0; rangee < NB_RANGEES; rangee++) {
 
-// Ligne separateur haut de la rangee 
-        afficher_separateur_ligne(y);
-// Panneau joueur sur la meme ligne 
-        afficher_panneau_joueur_ligne(joueurs, nb_joueurs, nb_tours, ligne_panneau++);
+        // Ligne horizontale au dessus de la rangee
+        afficher_separateur_ligne(rangee);
+        printf("  ");
+        afficher_panneau_joueur_ligne(joueurs, nb_joueurs, nb_tours, ligne_panneau);
+        ligne_panneau++;
         printf("\n");
 
-// Ligne des cases 
-        for (int x = 0; x < 7; x++) {
-            int idx_j = joueur_sur_case(joueurs, nb_joueurs, x, y);
-            afficher_case(labyrinthe[y][x], idx_j, x, y);
+        // On affiche chaque case de la rangee une par une
+        for (int col = 0; col < NB_COLONNES; col++) {
+            int idx = joueur_sur_case(joueurs, nb_joueurs, rangee, col);
+            afficher_case(labyrinthe[rangee][col], idx, rangee, col);
         }
+
+        // Le bord droit ne s'affiche que pour les vraies lignes du labyrinthe pas pour les rangees 0 et 6 qui sont juste les positions du debut 
+       
+        if (rangee != 0 && rangee != 6) {
+            printf("|");
+        }
+
         printf("  ");
-// Panneau joueur sur la meme ligne 
-        afficher_panneau_joueur_ligne(joueurs, nb_joueurs, nb_tours, ligne_panneau++);
+        afficher_panneau_joueur_ligne(joueurs, nb_joueurs, nb_tours, ligne_panneau);
+        ligne_panneau++;
         printf("\n");
     }
 
-// Derniere ligne separateur bas du plateau 
-    afficher_separateur_ligne(6);
+    // Fermeture du bas du plateau
+    afficher_separateur_ligne(NB_RANGEES - 1);
     printf("\n");
 
-// Legende
-    printf("  Legende : [?]=cache  [B]=Basilic [Z]=Zombie [T]=Troll [H]=Harpie\n");
-    printf("            [A]=Arme antique  [C]=Coffre  [P]=Portail  [O]=Totem\n");
-    printf("            [G]=Guerrier [R]=Ranger [W]=Magicien [V]=Voleur\n\n");
+    // Rappel des symboles pour que le joueur ou faut qu'on ajoute des images !!!
+    printf("-- Legende --\n");
+    printf("  [B] Basilic   [Z] Zombie   [T] Troll   [H] Harpie\n");
+    printf("  [A] Arme ant. [C] Coffre   [P] Portail [O] Totem\n");
+    printf("  [?] Case cachee\n\n");
 
-// Log des evenements 
+    // Derniers evenements du jeu : combats, coffres, portails etc 
     afficher_log();
-
-    printf("\n");
 }
+
 
 
 //  AFFICHAGE FIN DE PARTIE
