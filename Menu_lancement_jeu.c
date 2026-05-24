@@ -1,28 +1,39 @@
 #include "fichier.h"
 #include "projet.h"
 #include "fichier_sauvg.h"
+
+// les noms des classes des personnages
 const char* noms_des_classes[] = {"Guerrier(re)", "Ranger", "Magicien(nes)", "Voleur(euse)"};
+// les noms des monstres
 const char* noms_monstres[] = {"Basilic", "Zombie", "Troll", "Harpie"};
+// les noms des armes
 const char* noms_armes[] = {"Epee de Feu", "Baton des Familiers", "Grimoire a 5 feuilles", "Dague du Sommeil"};
+
+// cette fonction sert a choisir la case de depart entre 1 et 5
 int choix_case(){
 	int resultat_scanf;
 	do{
         	printf("joueurs, choisissez votre case de départs (1 à 5)");
         	resultat_scanf = scanf("%d",&p);
         	int c;
+        	// on vide le clavier pour eviter les bugs
         	while ((c = getchar()) != '\n' && c != EOF) { }
+        	// si le joueur met un mauvais numero on lui dit
         	if(resultat_scanf != 1 || p<1 || p>5){
             		printf("ERREUR ! Le numéro de la case de départs est compris entre 1 et 5 !");
 
         	}
+        // on recommence tant que c'est pas bon
         }while(p<1 || p>5);
         return p;
 }
 	
+// cette fonction configure toute la partie avant de commencer
 int configurer_partie(aventurier joueurs[]){
     int nb_joueurs;
     int Classe;
     int resultat_scanf;
+    // on initialise tous les joueurs a zero pour partir sur quelque chose de propre
     for(int i=0;i<4;i++){
         joueurs[i].nb_coffre = 0;
         joueurs[i].a.x = 0;
@@ -34,45 +45,48 @@ int configurer_partie(aventurier joueurs[]){
         joueurs[i].nb_monstres_tues = 0;
         joueurs[i].nb_cases_parcourues = 0;
     }
+    // on marque les bords du labyrinthe pour que les joueurs puissent pas en sortir
     for(int i=0;i<7;i++){
         labyrinthe[0][i].Categorie_Carte = Bordure;
         labyrinthe[6][i].Categorie_Carte = Bordure;
         labyrinthe[i][6].Categorie_Carte = Bordure;
         labyrinthe[i][0].Categorie_Carte = Bordure;
     }
+    // on demande combien il y a de joueurs et on verifie que c'est entre 1 et 4
     do{
         printf("choisisez le nombre de joueur(max 4) !");
         resultat_scanf = scanf("%d",&nb_joueurs);
         int c;
+        // on vide le clavier
         while ((c = getchar()) != '\n' && c != EOF) { }
         if(resultat_scanf != 1 || nb_joueurs<1 || nb_joueurs>4){
         printf("ERREUR ! le nb de joueurs est compris entre 1 et 4 !");
         }
     }while(nb_joueurs <1  || nb_joueurs > 4);
     
+    // on appelle la fonction pour choisir la case de depart
     p = choix_case();
+    // on configure chaque joueur un par un
     for(int i = 0; i<nb_joueurs;i++){
         char nom_saisi[50];
         printf("joueur %d, Quel est votre nom ?", i+1);
-        scanf("%s",nom_saisi); //voir plus tard comment rendre robuste
+        scanf("%s",nom_saisi);
+        // on recupere le profil existant ou on en cree un nouveau
         joueurs[i].joueur_qui_controle = obtenir_ou_creer_profil(nom_saisi);
+        // on demande la classe et on boucle tant que c'est pas valide
         do{
             printf("%s, choisissez votre classe d'aventurier : 1/Guerrier 2/Ranger 3/Magicien 4/Voleur\n", joueurs[i].joueur_qui_controle->nom);
-    
-            // scanf renvoie 1 s'il a réussi à lire un entier, 0 sinon
             resultat_scanf = scanf("%d", &Classe); 
-    
-            // LA CHASSE D'EAU : On vide la mémoire du clavier (buffer)
-            // On lit tous les caractères restants jusqu'à trouver la touche "Entrée" (\n)
+            // on vide le clavier
             int c;
             while ((c = getchar()) != '\n' && c != EOF) { } 
-
-    // On vérifie deux choses : si ce n'est PAS un chiffre OU si c'est hors limites
+        // si c'est pas bon on remet Classe a 0 pour forcer la boucle a recommencer
         if(resultat_scanf != 1 || Classe < 1 || Classe > 4) {
         printf("ERREUR ! Veuillez entrer un CHIFFRE valide entre 1 et 4 ! Recommencez.\n\n");
-        Classe = 0; // On force la classe à 0 pour être sûr que le while() nous fasse recommencer
+        Classe = 0;
     }
         }while(Classe<1 || Classe>4);
+        // on assigne la bonne classe au joueur selon son choix
         switch(Classe){
             case 1 : 
                 joueurs[i].classe_joueur = guerrier;
@@ -94,48 +108,53 @@ int configurer_partie(aventurier joueurs[]){
         }
 
         joueurs[i].nb_coffre = 0;
+        // on place chaque joueur sur un bord different du plateau selon son numero
         switch(i){
             case 0 : 
-                joueurs[i].a.x = 0;
+                joueurs[i].a.x = 0; // joueur 1 arrive par le haut
                 joueurs[i].a.y = p;
                 break;
             case 1 : 
                 joueurs[i].a.x = p;
-                joueurs[i].a.y = 6;
+                joueurs[i].a.y = 6; // joueur 2 arrive par la droite
                 break;
             case 2 : 
-                joueurs[i].a.x = 6;
+                joueurs[i].a.x = 6; // joueur 3 arrive par le bas
                 joueurs[i].a.y = p;
                 break;
             case 3 : 
                 joueurs[i].a.x = p;
-                joueurs[i].a.y = 0;
+                joueurs[i].a.y = 0; // joueur 4 arrive par la gauche
                 break;
 
         }
 
     }
 
-    //fonction QUI REMPLI LE PLATEAU
+    // on rempli le plateau avec des cases au hasard
     printf("\n \n Plateau : \n");
+    // le stock de chaque type de case disponible
     int nb_monstres = 16;
     int nb_arme_antiques = 4;
+    // chaque arme est unique donc y en a qu'une de chaque
     int EpeeDeFeu = 1, BatonFamilliers =1, Grimoire5feuilles=1 ,DagueDuSommeil =1;
     int nb_totems = 2;
     int nb_coffre = 2;
     int nb_portail = 1;
+    // on parcourt toutes les cases du milieu sans les bords
     for(int i = 1; i<6;i++){
         for(int y = 1; y<6; y++){
             labyrinthe[i][y].Etat_carte = 0;
             int tirage_valide = 0;
             int tirage_valide_armes =0;
+            // on tire une categorie au hasard et on recommence si y en a plus
             do{
                 labyrinthe[i][y].Categorie_Carte = rand()%5;
                 switch(labyrinthe[i][y].Categorie_Carte){
                     case Monstre : 
                         if (nb_monstres > 0) {
                             nb_monstres--;
-                            tirage_valide = 1; // Indispensable pour sortir de la boucle !
+                            tirage_valide = 1;
                         }
                         break;
                     case ArmeAntiques : 
@@ -162,22 +181,25 @@ int configurer_partie(aventurier joueurs[]){
                             tirage_valide = 1; 
                         }
                         break;
-                    case Bordure : // <--- AJOUTE ÇA
-                            break; 
+                    case Bordure :
+                        break; 
                 }
             }while(tirage_valide == 0);
+            // on affiche ce qu'il y a sur la case
             if(labyrinthe[i][y].Categorie_Carte == Monstre){
+                // on choisit quel monstre au hasard parmi les 4
                 labyrinthe[i][y].type_monstre = rand() % 4;
                 printf("%s ;", noms_monstres[labyrinthe[i][y].type_monstre]);
             }
             else if(labyrinthe[i][y].Categorie_Carte == ArmeAntiques){
+                // on tire quelle arme c'est, et on recommence si elle est deja placee
                 do{
                 labyrinthe[i][y].Arme_legendaire = rand()%4;
                 switch(labyrinthe[i][y].Arme_legendaire){
                     case 0 : 
                         if (EpeeDeFeu > 0) {
                             EpeeDeFeu--;
-                            tirage_valide_armes = 1; // Indispensable pour sortir de la boucle !
+                            tirage_valide_armes = 1;
                             printf("Epee de feu ;");
                         }
                         break;
@@ -216,6 +238,7 @@ int configurer_partie(aventurier joueurs[]){
                 printf("Coffre ;");
             }
         }    
+        // on saute une ligne apres chaque rangee du plateau
         printf("\n");
         
     }
