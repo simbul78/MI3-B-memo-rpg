@@ -338,18 +338,18 @@ void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_
 
     // Rappel des symboles pour que le joueur ou faut qu'on ajoute des images !!!
     printf("-- Legende --\n");
-printf("  🐍 Basilic   🧟 Zombie   👹 Troll   🦅 Harpie\n");
-printf("  ⚔️  Arme ant.  📦 Coffre   🌀 Portail  🗿 Totem\n");
-printf("  ❓ Case cachee\n");
-for (int i = 0; i < 4; i++) {
-    // 1. On vérifie d'abord si le pointeur existe
-    if (joueurs[i].joueur_qui_controle != NULL) {
-        // 2. On affiche l'emoji selon l'indice
-        const char* emojis[] = {"🔴", "🔵", "🟡", "🟣"};
-        printf("  %s %s", emojis[i], joueurs[i].joueur_qui_controle->nom);
+    printf("  🐍 Basilic   🧟 Zombie   👹 Troll   🦅 Harpie\n");
+    printf("  ⚔️  Arme ant.  📦 Coffre   🌀 Portail  🗿 Totem\n");
+    printf("  ❓ Case cachee\n");
+    for (int i = 0; i < 4; i++) {
+        // 1. On vérifie d'abord si le pointeur existe
+        if (joueurs[i].joueur_qui_controle != NULL) {
+            // 2. On affiche l'emoji selon l'indice
+            const char* emojis[] = {"🔴", "🔵", "🟡", "🟣"};
+            printf("  %s %s", emojis[i], joueurs[i].joueur_qui_controle->nom);
+        }
     }
-}
-printf("  \n\n");
+    printf("  \n\n");
     // Derniers evenements du jeu : combats, coffres, portails etc 
     afficher_log();
 }

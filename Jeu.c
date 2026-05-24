@@ -383,6 +383,18 @@ void partie(aventurier joueurs[],int nb_joueurs){
                                 snprintf(buffer, 100, "Fin du Round %d. Temps ecoule : %02d:%02d:%02d", compteur_tours, heures, minutes, secondes);
                                 log_ajouter(buffer);
                                 joueurs[i].joueur_qui_controle->victoires ++;
+                                for(int j=0;j<4;j++){
+                                    snprintf(buffer, 100, "%s, Voici vos stats",joueurs[j].joueur_qui_controle->nom);
+                                    log_ajouter(buffer);
+                                    snprintf(buffer, 100, "Nombres de cases parcourues : %d",joueurs[j].nb_cases_parcourues);
+                                    log_ajouter(buffer);
+                                    snprintf(buffer, 100, "Nombres de cases parcourues : %d",joueurs[j].nb_monstres_tues);
+                                    log_ajouter(buffer);
+                                    snprintf(buffer, 100, "Nombres de cases parcourues : %d",joueurs[j].joueur_qui_controle->victoires);
+                                    log_ajouter(buffer);
+
+
+                                }
                                 return; // On quitte la fonction 'partie', le jeu s'arrête net.
                             }
                             break;
