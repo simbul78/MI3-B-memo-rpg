@@ -1,6 +1,7 @@
 #include "projet.h"
 #include "fichier.h"
 
+// deplace le joueur selon la touche appuyee (z/q/s/d)
 void deplacer_joueur(aventurier *joueur, char direction){
     // Les contrôles absolus : on se repère uniquement par rapport à l'écran !
     if (direction == 'z') joueur->a.x--;      // Haut (On remonte vers la ligne 0)
@@ -8,12 +9,15 @@ void deplacer_joueur(aventurier *joueur, char direction){
     else if (direction == 'q') joueur->a.y--; // Gauche (On va vers la colonne 0)
     else if (direction == 'd') joueur->a.y++; // Droite (On va vers la colonne 6)
 }
+
+// gere le combat contre un monstre
+// chaque monstre est battu uniquement avec la bonne arme, sinon le joueur meurt
 void combattre_monstre(aventurier *joueur,Carte monstre){
     if(monstre.type_monstre == 0){
         log_ajouter("C'est un Basilic !");
         switch (joueur->arme_active)
         {
-        case 0:
+        case 0: // bouclier reflechissant bat le basilic
             log_ajouter("Vous avez battu le Basilic !");
             joueur->nb_monstres_tues++;
             break;
@@ -27,7 +31,7 @@ void combattre_monstre(aventurier *joueur,Carte monstre){
         log_ajouter("C'est un Zombie !");
         switch (joueur->arme_active)
         {
-        case 1:
+        case 1: // torche bat le zombie
             log_ajouter("Vous avez battu le Zombie!");
             joueur->nb_monstres_tues++;
             break;
@@ -41,7 +45,7 @@ void combattre_monstre(aventurier *joueur,Carte monstre){
         log_ajouter("C'est un Troll !");
         switch (joueur->arme_active)
         {
-        case 3:
+        case 3: // hache en pierre bat le troll
             log_ajouter("Vous avez battu le Troll!");
             joueur->nb_monstres_tues++;
             break;
@@ -55,7 +59,7 @@ void combattre_monstre(aventurier *joueur,Carte monstre){
         log_ajouter("C'est une Harpie !");
         switch (joueur->arme_active)
         {
-        case 2:
+        case 2: // arc long bat la harpie
             log_ajouter("Vous avez battu la Harpie !");
             joueur->nb_monstres_tues++;
             break;
@@ -66,11 +70,14 @@ void combattre_monstre(aventurier *joueur,Carte monstre){
         }
     }
 }
+
+// gere la decouverte d'une arme legendaire
+// seule la bonne classe peut la ramasser
 void arme_legendaire(aventurier *joueur,Carte arme_leg){
     if(arme_leg.Arme_legendaire== 0){
-        log_ajouter("Vous trouvez l’epee de feu");
+        log_ajouter("Vous trouvez l'epee de feu");
         switch(joueur->classe_joueur){
-            case 0 : 
+            case 0 : // guerrier uniquement
                     if(joueur->nb_coffre ==0){
                         log_ajouter("C'est exactement ce que vous chercher ! Vous la prenez donc et continuer votre chemin");
                     }
@@ -87,7 +94,7 @@ void arme_legendaire(aventurier *joueur,Carte arme_leg){
     else if(arme_leg.Arme_legendaire== 1){
         log_ajouter("Vous trouvez le baton de controle des familiers");
         switch(joueur->classe_joueur){
-            case 1 :
+            case 1 : // ranger uniquement
                     if(joueur->nb_coffre ==0){
                         log_ajouter("C'est exactement ce que vous chercher ! Vous la prenez donc et continuer votre chemin");
                     }
@@ -103,7 +110,7 @@ void arme_legendaire(aventurier *joueur,Carte arme_leg){
     else if(arme_leg.Arme_legendaire== 2){
         log_ajouter("Vous trouvez le grimoire interdit !");
         switch(joueur->classe_joueur){
-            case 2 : 
+            case 2 : // magicien uniquement
                     if(joueur->nb_coffre ==0){
                         log_ajouter("C'est exactement ce que vous chercher ! Vous la prenez donc et continuer votre chemin");
                     }
@@ -118,7 +125,7 @@ void arme_legendaire(aventurier *joueur,Carte arme_leg){
     else if(arme_leg.Arme_legendaire== 3){
         log_ajouter("Vous trouvez la dague de sommeil!");
         switch(joueur->classe_joueur){
-            case 3 : 
+            case 3 : // voleur uniquement
                     if(joueur->nb_coffre ==0){
                         log_ajouter("C'est exactement ce que vous chercher ! Vous la prenez donc et continuer votre chemin");
                     }
@@ -137,6 +144,8 @@ void arme_legendaire(aventurier *joueur,Carte arme_leg){
 
 
 }
+
+// fonction principale du jeu, gere tous les tours jusqu'a la victoire
 void partie(aventurier joueurs[],int nb_joueurs){
     for(int i=0;i<nb_joueurs;i++){
     joueurs[i].joueur_qui_controle->parties_jouees++;
@@ -147,11 +156,13 @@ void partie(aventurier joueurs[],int nb_joueurs){
         time_t debut_manche = time(NULL);
         printf("Round %d \n",compteur_tours);
         for(int i=0;i<nb_joueurs;i++){ 
+            // on remet toutes les cartes face cachee pour ce joueur
             for(int j = 1; j<6;j++){
                     for(int y = 1; y<6; y++){
                         labyrinthe[j][y].Etat_carte = 0;
                     }
                 }  
+            // si le joueur est mort il ressuscite et retourne a sa base
             if(joueurs[i].vie_joueur == 0){
                 char buffer[100];
                 snprintf(buffer, 100, "%s ressuscite et revient a sa base !", joueurs[i].joueur_qui_controle->nom);
@@ -207,11 +218,13 @@ void partie(aventurier joueurs[],int nb_joueurs){
                     // Pareil pour la DROITE
                     int droite_bloque = (y + 1 > 6) || (labyrinthe[x][y + 1].Etat_carte == 1);
 
+                    // si toutes les directions sont bloquees le joueur est piege
                     if (haut_bloque && bas_bloque && gauche_bloque && droite_bloque) {
                         log_ajouter("Vous etes piege ! Toutes les cartes autour de vous ont ete revelees ou sont des murs.");
                         joueurs[i].vie_joueur = 0; 
                     }
                     
+                    // choix de l'arme pour ce tour
                     do{
                         printf("%s De quel arme voulez vous vous équiper ? BouclierReflechissant(0),Torche(1),ArcLong(2),HacheEnPierre(3)", joueurs[i].joueur_qui_controle->nom);
 
@@ -247,6 +260,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                                 }
                             } while (resultat_scanf != 1 || (choix_dir != 'z' && choix_dir != 'q' && choix_dir != 's' && choix_dir != 'd'));
                         }
+                        // si le joueur est sur un portail il choisit les coordonnees de sa destination
                         else if(!est_sur_la_bordure && joueurs[i].en_teleportation == 1){
                         	printf("\n Pour, rappel vous etes au portail, choississez donc les coordonnees de la carte(non revelee) que vous choisissez ! \n");
                         	do{
@@ -265,6 +279,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                         	}while(joueurs[i].a.x <=0 || joueurs[i].a.x >=6 || joueurs[i].a.y <=0 || joueurs[i].a.y >=6 || labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte == 1);
                         }
                         else {
+                            // le joueur est sur sa bordure, on le force a rentrer vers le centre
                             printf("Vous rentrez dans le labyrinthe !");
                             // On force la touche absolue pour que le joueur aille vers le centre (x=3, y=3)
                             if (i == 0) choix_dir = 's';      // Joueur en Haut -> Force le Bas
@@ -303,6 +318,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                     labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Etat_carte = 1;
                     snprintf(buffer, 100, "Position actuelle : (%d, %d)", joueurs[i].a.x, joueurs[i].a.y);
                     log_ajouter(buffer);
+                    // on regarde sur quelle case le joueur est tombe
                     switch (labyrinthe[joueurs[i].a.x][joueurs[i].a.y].Categorie_Carte){
                         case 0 :
                             log_ajouter("Vous tomber sur un monstre !");
@@ -310,6 +326,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                             break;
                         case 1 : 
                             arme_legendaire(&joueurs[i],labyrinthe[joueurs[i].a.x][joueurs[i].a.y]);
+                            // arme + coffre = victoire
                             if(joueurs[i].booleen_arme_antique == 1 && joueurs[i].nb_coffre >= 1) {
                                 for(int r = 1; r < 6; r++) {
                                     for(int c = 1; c < 6; c++) {
@@ -332,6 +349,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                             
                             break;
                         case 2 : 
+                            // totem : le joueur echange cette case avec une autre puis meurt
                             printf("Vous etes tombe sur un totem de transmutation ! Vous devez donc choisir la carte non revelee avec laquelle vous voulez echanger le totem \n");
                             int totem_x;
                             int totem_y;
@@ -356,6 +374,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                             }
                             break;
                         case 3 : 
+                            // portail : le joueur pourra se teleporter au prochain mouvement
                             log_ajouter("SWOOSH ! Tu tombes sur un Portail mysterieux !");
                             joueurs[i].en_teleportation = 1;
                             break;       
@@ -364,6 +383,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                             char buffer[100];
                             snprintf(buffer, 100, "C'est un trésor ! Vous l'ouvrez et prenez son contenu. Votre nb de coffre ouvert est a %d", joueurs[i].nb_coffre);
                             log_ajouter(buffer);
+                            // coffre + arme = victoire
                             if(joueurs[i].booleen_arme_antique == 1 && joueurs[i].nb_coffre >= 1) {
                                 for(int i = 1; i < 6; i++) {
                                     for(int j = 1; j < 6; j++) {
@@ -401,6 +421,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                         default:    
                             break;
                     }
+                    // on attend que le joueur appuie sur entree avant de continuer
                     time_t t_pause = time(NULL);
                     afficher_jeu(joueurs, nb_joueurs, compteur_tours, (int)difftime(t_pause, debut_manche));
                     
@@ -441,4 +462,3 @@ void partie(aventurier joueurs[],int nb_joueurs){
 }
 
 }
-
