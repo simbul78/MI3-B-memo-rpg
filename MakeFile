@@ -1,0 +1,20 @@
+# Variables
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c99
+OBJ = affichage_jeu.o Base_de_donnees.o Jeu.o main.o Menu_lancement_jeu.o sauvg.o
+TARGET = memo_rpg
+
+# Règle principale
+all: $(TARGET)
+
+# Liaison des objets pour créer l'exécutable
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ)
+
+# Compilation des fichiers .c en .o (objets)
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Nettoyage des fichiers objets et de l'exécutable
+clean:
+	rm *.o $(TARGET).exe
