@@ -68,7 +68,7 @@ void combattre_monstre(aventurier *joueur,Carte monstre){
 }
 void arme_legendaire(aventurier *joueur,Carte arme_leg){
     if(arme_leg.Arme_legendaire== 0){
-        log_ajouter("Vous trouvez l’épée de feu");
+        log_ajouter("Vous trouvez l’epee de feu");
         switch(joueur->classe_joueur){
             case 0 : 
                     if(joueur->nb_coffre ==0){
@@ -85,7 +85,7 @@ void arme_legendaire(aventurier *joueur,Carte arme_leg){
 
     }
     else if(arme_leg.Arme_legendaire== 1){
-        log_ajouter("Vous trouvez le baton de contrôle des familiers");
+        log_ajouter("Vous trouvez le baton de controle des familiers");
         switch(joueur->classe_joueur){
             case 1 :
                     if(joueur->nb_coffre ==0){
@@ -146,7 +146,12 @@ void partie(aventurier joueurs[],int nb_joueurs){
     while(partie_termine == 0){
         time_t debut_manche = time(NULL);
         printf("Round %d \n",compteur_tours);
-        for(int i=0;i<nb_joueurs;i++){  
+        for(int i=0;i<nb_joueurs;i++){ 
+            for(int j = 1; j<6;j++){
+                    for(int y = 1; y<6; y++){
+                        labyrinthe[j][y].Etat_carte = 0;
+                    }
+                }  
             if(joueurs[i].vie_joueur == 0){
                 char buffer[100];
                 snprintf(buffer, 100, "%s ressuscite et revient a sa base !", joueurs[i].joueur_qui_controle->nom);
@@ -154,11 +159,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                 joueurs[i].vie_joueur = 1;
                 joueurs[i].booleen_arme_antique = 0;
                 joueurs[i].nb_coffre= 0;
-                for(int j = 1; j<6;j++){
-                    for(int y = 1; y<6; y++){
-                        labyrinthe[j][y].Etat_carte = 0;
-                    }
-                } 
+                
                 switch(i){
             case 0 : 
                 joueurs[i].a.x = 0;
@@ -212,7 +213,7 @@ void partie(aventurier joueurs[],int nb_joueurs){
                     }
                     
                     do{
-                        printf("De quel arme voulez vous vous équiper ? BouclierReflechissant(0),Torche(1),ArcLong(2),HacheEnPierre(3)");
+                        printf("%s De quel arme voulez vous vous équiper ? BouclierReflechissant(0),Torche(1),ArcLong(2),HacheEnPierre(3)", joueurs[i].joueur_qui_controle->nom);
 
                         resultat_scanf = scanf("%d",(int*)&joueurs[i].arme_active); //voir s'il est préférable d'entrer le nom entier de l'arme ou le numero
 
@@ -364,9 +365,9 @@ void partie(aventurier joueurs[],int nb_joueurs){
                             snprintf(buffer, 100, "C'est un trésor ! Vous l'ouvrez et prenez son contenu. Votre nb de coffre ouvert est a %d", joueurs[i].nb_coffre);
                             log_ajouter(buffer);
                             if(joueurs[i].booleen_arme_antique == 1 && joueurs[i].nb_coffre >= 1) {
-                                for(int r = 1; r < 6; r++) {
-                                    for(int c = 1; c < 6; c++) {
-                                        labyrinthe[r][c].Etat_carte = 1;
+                                for(int i = 1; i < 6; i++) {
+                                    for(int j = 1; j < 6; j++) {
+                                        labyrinthe[i][j].Etat_carte = 1;
                                     }
                                 }
     
@@ -394,13 +395,15 @@ void partie(aventurier joueurs[],int nb_joueurs){
                     printf("\nAction terminee. Appuyez sur [Entree] pour passer a la suite...");
                     int c_clear;
                     while ((c_clear = getchar()) != '\n' && c_clear != EOF) { }
-                    getchar();
                     
                     
                         
             }
 
         }
+        joueurs[i].a.x = 0;
+        joueurs[i].a.y = 0;
+        joueurs[i].arme_active = Aucune;
         if (partie_termine == 0) {
             time_t fin_manche = time(NULL);
             double temps_ecoule = difftime(fin_manche, debut_manche);

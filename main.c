@@ -1,50 +1,65 @@
 #include "fichier.h"
 #include "projet.h"
 #include "fichier_sauvg.h"
+#include <windows.h>
+
 int p = 0;
 int main() {
+    SetConsoleOutputCP(CP_UTF8);
     // Initialisation du générateur d'aléatoire 
-    // (Très important si ton labyrinthe ou tes monstres sont placés au hasard dans ton menu)
     srand(time(NULL));
     
     charger_statistiques(); //charge les stats de base 
     
-    int rejouer = 0;
+    int choix_menu = 0;
 
     do {
-        aventurier joueurs[4]; // Le tableau qui va contenir jusqu'à 4 joueurs
-        int nb_joueurs = 0;
-
-        printf("\n======================================\n");
+        printf("\033[2J\033[H");
+        printf("======================================\n");
         printf("        BIENVENUE DANS MEMO RPG       \n");
         printf("======================================\n\n");
+        printf("  Que voulez-vous faire ?\n\n");
+        printf("  1. Aventure ! (Lancer une partie)\n");
+        printf("  2. Hall of Fame (Voir les stats)\n");
+        printf("  0. Rentrer a la maison (Quitter)\n\n");
+        printf("Votre choix : ");
 
-        // 1. APPEL DE TON MENU 
-        // Le fichier Menu_lancement_jeu.c prend le relais pour 
-        // initialiser la carte, créer les joueurs et renvoyer le nombre de participants.
-        // (Vérifie que c'est bien le nom exact de ta fonction de menu !)
-        nb_joueurs = configurer_partie(joueurs); 
+        int r = scanf("%d", &choix_menu);
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF) { }
+        if (r != 1) choix_menu = -1;
 
-        // 2. LANCEMENT DU JEU
-        // Si le menu s'est bien passé et qu'il y a des joueurs, on lance le combat !
-        if (nb_joueurs > 0) {
-            partie(joueurs, nb_joueurs);
+        if (choix_menu == 1) {
+            int rejouer = 0;
+            do {
+                aventurier joueurs[4];
+                int nb_joueurs = configurer_partie(joueurs);
+
+                if (nb_joueurs > 0) {
+                    partie(joueurs, nb_joueurs);
+                }
+
+                printf("\n======================================\n");
+                printf("  Alors, pret pour une revanche ?\n\n");
+                printf("  1. Oui, on repart !\n");
+                printf("  2. Non, je rentre au village.\n");
+                printf("Votre choix : ");
+                int r2 = scanf("%d", &rejouer);
+                while ((c = getchar()) != '\n' && c != EOF) { }
+                if (r2 != 1) rejouer = 0;
+
+            } while (rejouer == 1);
+        }
+        else if (choix_menu == 2) {
+            afficher_scores();
+            printf("Appuyez sur [Entree] pour revenir au menu...");
+            while ((c = getchar()) != '\n' && c != EOF) { }
+            getchar();
         }
 
-        // 3. LA BOUCLE DE REPLAY
-        printf("\n======================================\n");
-        printf("Voulez-vous refaire une partie ? (1 = Oui, 0 = Quitter) : ");
-        int resultat = scanf("%d", &rejouer);
-        
-        // Sécurité habituelle pour nettoyer le clavier
-        int c;
-        while ((c = getchar()) != '\n' && c != EOF) { } 
-        if (resultat != 1) rejouer = 0; 
+    } while (choix_menu != 0);
 
-    } while (rejouer == 1);
-
-      sauvegarder_statistiques();//sauvegarder les stats avant de quitter 
-
-    printf("\nMerci d'avoir joue au Memo RPG ! A bientot.\n");
+    sauvegarder_statistiques();
+    printf("\nMerci d'avoir joue, aventurier. A bientot !\n");
     return 0;
 }

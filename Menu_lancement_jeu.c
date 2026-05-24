@@ -115,10 +115,7 @@ int configurer_partie(aventurier joueurs[]){
         }
 
     }
-    for(int i = 0; i<100;i++){
-        if(Donnees_joueur[i].nom[0] == '\0') printf("X ;");
-        else printf("%s ;",Donnees_joueur[i].nom);
-    }
+
     //fonction QUI REMPLI LE PLATEAU
     printf("\n \n Plateau : \n");
     int nb_monstres = 16;

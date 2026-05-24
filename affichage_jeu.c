@@ -20,15 +20,6 @@
 #define RESET       "\033[0m"   // remet la couleur par defaut
  
 
-//  EMOJIS DES JOUEURS (un par joueur)
-
-//  Joueur 0 (Guerrier)  → 🔴
-//  Joueur 1 (Ranger)    → 🔵
-//  Joueur 2 (Magicien)  → 🟡
-//  Joueur 3 (Voleur)    → 🟣
- 
-static const char *EMOJI_JOUEUR[] = {"🔴", "🔵", "🟡", "🟣"};
-static const char *COULEUR_JOUEUR[] = {ROUGE, BLEU, JAUNE, VIOLET};
 
 //  NOMS
 
@@ -55,12 +46,7 @@ static const char *NOM_ARME_BASE[] = {
 };
 
 
-static const char *NOM_ARME_ANTIQUE[] = {
-    "Epee de Feu", "Baton Familiers", "Grimoire", "Dague Sommeil"
-};
 
-
-static const char *NOM_MONSTRE[] = {"Basilic", "Zombie", "Troll", "Harpie"};
 
 
 typedef struct {
@@ -112,24 +98,24 @@ static int joueur_sur_case(aventurier joueurs[], int nb_joueurs, int x, int y) {
  // symbole_case()
  // Renvoie le caractere a afficher au centre d'une case revelee.
  
-static char symbole_case(Carte c) {
-    switch (c.Categorie_Carte) {
-        case Monstre:
+//static char symbole_case(Carte c) {
+  //  switch (c.Categorie_Carte) {
+    //    case Monstre:
             // Lettre specifique au type de monstre 
-            switch (c.type_monstre) {
-                case Basilic: return 'B';
-                case Zombie:  return 'Z';
-                case Troll:   return 'T';
-                case Harpie:  return 'H';
-                default:       return 'M';
-            }
-        case ArmeAntiques: return 'A'; //faire la meme chose que pour les monstre : montrer quelle est l'arme antique en question
-        case Totem:        return 'O';
-        case Portail:      return 'P';
-        case Coffre:       return 'C';
-        default:           return ' ';
-    }
-}
+     //       switch (c.type_monstre) {
+       //         case Basilic: return 'B';
+         //       case Zombie:  return 'Z';
+           //     case Troll:   return 'T';
+             //   case Harpie:  return 'H';
+               // default:       return 'M';
+            //}
+        //case ArmeAntiques: return 'A'; //faire la meme chose que pour les monstre : montrer quelle est l'arme antique en question
+        //case Totem:        return 'O';
+        //case Portail:      return 'P';
+        //case Coffre:       return 'C';
+        //default:           return ' ';
+    //}
+//}
 
 
 // afficher_case()
@@ -137,79 +123,61 @@ static char symbole_case(Carte c) {
 // Si un joueur est dessus, priorite au symbole du joueur.
 // Si la case est une Bordure, on affiche des espaces.
  
-static void afficher_case(Carte c, int idx_joueur, int x, int y) {
- 
-    // Case bordure = vide (hors du labyrinthe 5x5)
+static void afficher_case(Carte c, int idx_joueur) {
+    // Case bordure = vide (7 ESPACES EXACTEMENT)
     if (c.Categorie_Carte == Bordure) {
-        printf("        "); 
-     // 8 espaces pour compenser la largeur des emojis
-        return;
-    }
- 
-    // Un joueur est present sur cette case : affiche son emoji avec sa couleur
-    if (idx_joueur >= 0) {
-        printf("%s[%s]%s  ",
-               COULEUR_JOUEUR[idx_joueur],
-               EMOJI_JOUEUR[idx_joueur],
-               RESET);
-        return;
-    }
- 
-    // Case cachee
-    if (c.Etat_carte == 0) {
-        printf("[❓]  ");
+        printf("       "); 
         return;
     }
 
-    // Un joueur est present sur cette case
+    // Un joueur est présent
     if (idx_joueur >= 0) {
         switch(idx_joueur) {
-            case 0: printf(ROUGE  "[ 🔴 ]" RESET "  "); break;
-            case 1: printf(BLEU   "[ 🔵 ]" RESET "  "); break;
-            case 2: printf(JAUNE  "[ 🟡 ]" RESET "  "); break;
-            case 3: printf(VIOLET "[ 🟣 ]" RESET "  "); break;
+            case 0: printf(ROUGE  "[ 🔴 ]" RESET " "); break; 
+            case 1: printf(BLEU   "[ 🔵 ]" RESET " "); break;
+            case 2: printf(JAUNE  "[ 🟡 ]" RESET " "); break;
+            case 3: printf(VIOLET "[ 🟣 ]" RESET " "); break;
         }
         return;
     }
 
-    // Case cachee
+    // Case cachée
     if (c.Etat_carte == 0) {
-        printf("[ ❓ ]  ");
+        printf("[ ❓ ] "); 
         return;
     }
 
-    // Case revelee : affiche l'emoji selon le contenu
+    // Case révélée
     switch (c.Categorie_Carte) {
         case Monstre:
             switch (c.type_monstre) {
-                case Basilic: printf("[ 🐍 ]  "); break;
-                case Zombie:  printf("[ 🧟 ]  "); break;
-                case Troll:   printf("[ 👹 ]  "); break;
-                case Harpie:  printf("[ 🦅 ]  "); break;
-                default:      printf("[ ❓ ]  "); break;
+                case Basilic: printf("[ 🐍 ] "); break;
+                case Zombie:  printf("[ 🧟 ] "); break;
+                case Troll:   printf("[ 👹 ] "); break;
+                case Harpie:  printf("[ 🦅 ] "); break;
+                default:      printf("[ ❓ ] "); break;
             }
             break;
-        case ArmeAntiques: printf("[ ⚔️  ]  "); break;
-        case Totem:        printf("[ 🗿 ]  "); break;
-        case Portail:      printf("[ 🌀 ]  "); break;
-        case Coffre:       printf("[ 📦 ]  "); break;
-        default:           printf("       ");   break;
+        case ArmeAntiques: printf("[ ⚔️ ] "); break;
+        case Totem:        printf("[ 🗿 ] "); break;
+        case Portail:      printf("[ 🌀 ] "); break;
+        case Coffre:       printf("[ 📦 ] "); break;
+        default:           printf("       ");   break; // 7 espaces
     }
 }
-
 
 // afficher_separateur_ligne()
 // Affiche une ligne de separation entre deux rangees du plateau.
 // Ne trace la ligne que pour les colonnes non-Bordure.
  
 static void afficher_separateur_ligne(int y) {
-    for (int x = 0; x < 7; x++) {
-        if (labyrinthe[y][x].Categorie_Carte == Bordure)
-            printf("       ");
-        else
-            printf("+------");
+    // On dessine la grille uniquement entre les rangées 1 et 6 (pour encadrer le labyrinthe)
+    if (y >= 1 && y <= 6) {
+        printf("       +------+------+------+------+------+      "); // 49 caractères pile
+    } else {
+        // Ligne 0 : Que du vide
+        printf("                                                 "); // 49 espaces pile
     }
-    printf("+\n");
 }
 
 
@@ -231,8 +199,6 @@ static void afficher_panneau_joueur_ligne(aventurier joueurs[], int nb_joueurs,
       int nb_tours, int ligne) {
     // Calcul du nombre total de lignes du panneau joueurs 
     int lignes_par_joueur = 4; // nom, classe, arme active, coffres 
-    int total_lignes = 1 + nb_joueurs * (lignes_par_joueur + 1);
-
     if (ligne == 0) {
         printf("  JOUEURS (tour %d)", nb_tours);
         return;
@@ -252,23 +218,27 @@ static void afficher_panneau_joueur_ligne(aventurier joueurs[], int nb_joueurs,
     aventurier *av = &joueurs[j];
     switch (sous_ligne) {
         case 0:
-            // Nom du joueur avec son symbole 
-            printf("  [%c] %s",
-                   LETTRE_CLASSE[av->classe_joueur],
-                   av->joueur_qui_controle ? av->joueur_qui_controle->nom : "???");
+            printf("[%c] %s", LETTRE_CLASSE[av->classe_joueur], av->joueur_qui_controle ? av->joueur_qui_controle->nom : "???");
             break;
         case 1:
-            printf("      Classe : %s", NOM_CLASSE[av->classe_joueur]);
+            // Sécurité : on vérifie que la classe existe bien entre 0 et 3
+            if (av->classe_joueur >= 0 && av->classe_joueur <= 3) {
+                printf("Classe : %s", NOM_CLASSE[av->classe_joueur]);
+            }
             break;
         case 2:
-            printf("      Arme   : %s", NOM_ARME_BASE[av->arme_active]);
+            // Sécurité : on vérifie que l'arme est bien entre 0 et 3
+            if (av->arme_active >= 0 && av->arme_active <= 3) {
+                printf("Arme   : %s", NOM_ARME_BASE[av->arme_active]);
+            } 
+            else {
+                printf("Arme   : Aucune");
+            }
             break;
         case 3:
-            printf("      Coffres: %d  Pos:(%d,%d)",
-                   av->nb_coffre, av->a.x, av->a.y);
+            printf("Coffres: %d  Pos:(%d,%d)", av->nb_coffre, av->a.x, av->a.y);
             break;
         case 4:
-            printf("  "); // ligne vide entre deux joueurs 
             break;
         default:
             break;
@@ -311,7 +281,6 @@ void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_
 
    // On efface le terminal pour rafraichir l'ecran 
     printf("\033[H\033[2J");
-    fflush(stdout);
 
     // pour afficher le temps de la partie 
     int mm = temps_s / 60;
@@ -337,40 +306,50 @@ void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_
 
     for (int rangee = 0; rangee < NB_RANGEES; rangee++) {
 
-        // Ligne horizontale au dessus de la rangee
+        // --- 1. LIGNE DES SÉPARATEURS ---
         afficher_separateur_ligne(rangee);
-       
+        printf(" |   "); // La barre droite
+        afficher_panneau_joueur_ligne(joueurs, nb_joueurs, nb_tours, ligne_panneau++);
         printf("\n");
 
-        // On affiche chaque case de la rangee une par une
+        // --- 2. LIGNE DES CASES ---
         for (int col = 0; col < NB_COLONNES; col++) {
             int idx = joueur_sur_case(joueurs, nb_joueurs, rangee, col);
-            afficher_case(labyrinthe[rangee][col], idx, rangee, col);
+            afficher_case(labyrinthe[rangee][col], idx);
         }
+        
+        printf(" |   "); // La barre droite bien alignée
+        afficher_panneau_joueur_ligne(joueurs, nb_joueurs, nb_tours, ligne_panneau++);
+        printf("\n");
+    }
 
-        // Le bord droit ne s'affiche que pour les vraies lignes du labyrinthe pas pour les rangees 0 et 6 qui sont juste les positions du debut 
-       
-        if (rangee != 0 && rangee != 6) {
-            printf("|");
-        }
-
-        printf("  ");
-        afficher_panneau_joueur_ligne(joueurs, nb_joueurs, nb_tours, ligne_panneau);
-        ligne_panneau++;
+    // --- 3. SÉCURITÉ POUR LES JOUEURS RESTANTS ---
+    // Si tu joues à 3 ou 4 joueurs, le texte continue proprement en bas !
+    int total_lignes_panneau = 1 + (nb_joueurs * 5); 
+    while (ligne_panneau < total_lignes_panneau) {
+        printf("                                                  |   "); // 49 espaces pour combler le trou
+        afficher_panneau_joueur_ligne(joueurs, nb_joueurs, nb_tours, ligne_panneau++);
         printf("\n");
     }
 
     // Fermeture du bas du plateau
-    afficher_separateur_ligne(NB_RANGEES - 1);
-    printf("\n");
+    //afficher_separateur_ligne(NB_RANGEES - 1);
+    //printf("\n");
 
     // Rappel des symboles pour que le joueur ou faut qu'on ajoute des images !!!
     printf("-- Legende --\n");
 printf("  🐍 Basilic   🧟 Zombie   👹 Troll   🦅 Harpie\n");
 printf("  ⚔️  Arme ant.  📦 Coffre   🌀 Portail  🗿 Totem\n");
 printf("  ❓ Case cachee\n");
-printf("  🔴 Joueur 1   🔵 Joueur 2   🟡 Joueur 3   🟣 Joueur 4\n\n");
- 
+for (int i = 0; i < 4; i++) {
+    // 1. On vérifie d'abord si le pointeur existe
+    if (joueurs[i].joueur_qui_controle != NULL) {
+        // 2. On affiche l'emoji selon l'indice
+        const char* emojis[] = {"🔴", "🔵", "🟡", "🟣"};
+        printf("  %s %s", emojis[i], joueurs[i].joueur_qui_controle->nom);
+    }
+}
+printf("  \n\n");
     // Derniers evenements du jeu : combats, coffres, portails etc 
     afficher_log();
 }

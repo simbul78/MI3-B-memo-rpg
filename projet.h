@@ -8,7 +8,7 @@ typedef enum{
     
 }classe;
 typedef enum{
-    BouclierReflechissant,Torche,ArcLong,HacheEnPierre
+    BouclierReflechissant,Torche,ArcLong,HacheEnPierre,Aucune
     
 }armesDeBase;
 typedef enum{
@@ -58,5 +58,5 @@ int configurer_partie(aventurier joueurs[]);
 void partie(aventurier joueurs[], int nb_joueurs);
 void log_ajouter(const char *message);
 void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_s);
-
+void afficher_scores(void);
 #endif
