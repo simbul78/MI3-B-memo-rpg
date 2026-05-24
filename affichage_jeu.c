@@ -339,9 +339,7 @@ void afficher_jeu(aventurier joueurs[], int nb_joueurs, int nb_tours, int temps_
 
         // Ligne horizontale au dessus de la rangee
         afficher_separateur_ligne(rangee);
-        printf("  ");
-        afficher_panneau_joueur_ligne(joueurs, nb_joueurs, nb_tours, ligne_panneau);
-        ligne_panneau++;
+       
         printf("\n");
 
         // On affiche chaque case de la rangee une par une
